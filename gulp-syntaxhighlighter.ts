@@ -33,10 +33,9 @@ export interface ClassNames{
 export interface ToggleConfig{
     toggleState?:"Show"|"Hide",
     message?:ToggleConfigMessage,
-    svgCreateToggleFn?:string,
+    createToggleFn?:string,
     classNames?:ClassNames,
-    customCss?:string,
-    
+    customCss?:string
 }
 export interface SyntaxHighlighterOptions{
     isPartialFn?:(html:string,file:File)=>boolean
@@ -169,6 +168,7 @@ function getFilesWithExtensionFromDir(startPath:string,filter:(path:string)=>boo
 export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighlighterTransformOptions> {
     private removableScriptClassName="__removableScript";
     private useMinifiedSyntaxHighlighter=true;
+    private minifiedOutput=true;
     private file:File|undefined;
     private document:Document|undefined;
     private dom:JSDOM|undefined;
@@ -176,6 +176,9 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
     
     constructor(options:SyntaxHighlighterOptions){
         super(options);
+        if(this.options.minifiedOutput!==undefined){
+            this.minifiedOutput=this.options.minifiedOutput
+        }
         if(this.options.useMinifiedSyntaxHighlighter!==undefined){
             this.useMinifiedSyntaxHighlighter=this.options.useMinifiedSyntaxHighlighter;
         }
@@ -245,6 +248,15 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
         
     }
     //#region toggle
+    //#region defaults
+    private addToggleDefaults():ToggleConfig{
+        var toggleConfig:ToggleConfig=this.options.toggleConfig!;
+        toggleConfig.createToggleFn=toggleConfig.createToggleFn?toggleConfig.createToggleFn:this.defaultCreateToggleFn()
+        
+        this.addDefaultsToMessageConfig(toggleConfig);
+        this.addDefaultClassNames(toggleConfig);
+        return toggleConfig;
+    }
     private addDefaultsToMessageConfig(toggleConfig:ToggleConfig){
 
         const defaults:ToggleConfigMessage={
@@ -282,11 +294,12 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
         }
         
     }
+    //#endregion
 
     //#region toggle js
-    private defaultSvgCreateToggleFn():string{
+    private defaultCreateToggleFn():string{
         return `
-        function createSvg(show){//much easier through path
+        function createToggleElements(show){//much easier through path
             var xmlns="http://www.w3.org/2000/svg"
 
             var svg=document.createElementNS(xmlns,"svg");
@@ -321,21 +334,20 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
         return fs.readFileSync(path.join(__dirname,"toggle/toggle.js"),"utf8");
     }
     private getToggleScript():HTMLScriptElement{
-        var toggleConfig=this.options.toggleConfig as ToggleConfig;
-        this.addDefaultsToMessageConfig(toggleConfig);
-        const classNames=this.addDefaultClassNames(toggleConfig);
+        const toggleConfig=this.options.toggleConfig!;
+        
         const scriptElement=this.document!.createElement("script");
         scriptElement.type="text/javascript";
         
         let script=`
         (function(){
             var toggleConfig=${JSON.stringify(toggleConfig)};
-            ${toggleConfig.svgCreateToggleFn?toggleConfig.svgCreateToggleFn:this.defaultSvgCreateToggleFn()}
+            ${toggleConfig.createToggleFn}
             ${this.readToggle()}
             setUpToggle(toggleConfig);
         })()
         `
-        if(this.options.minifiedOutput){
+        if(this.minifiedOutput){
             const minifiedOutput=minify(script);
             if(minifiedOutput.error){
                 throw minifiedOutput.error;
@@ -355,25 +367,23 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
     //#region toggleCSS
     private getDefaultToggleCss(classNames:ClassNames):string{
         const svgSize="1em";
-        return `.toggle{ stroke:#000;top:0.125em;position:relative;height:${svgSize};width:${svgSize} }
-        .toggleText{ font-size:${svgSize}}
-        .toggleContainer{}
+        return `.${classNames.toggle}{ stroke:#000;top:0.125em;position:relative;height:${svgSize};width:${svgSize} }
+        .${classNames.toggleText}{ font-size:${svgSize}}
         `
     }
     
-    private addToggleCss(classNames:ClassNames,customCss?:string){
+    private addToggleCss(minifiedOutput:boolean,classNames:ClassNames,customCss?:string){
         let css:string=customCss?customCss:this.getDefaultToggleCss(classNames);
-        if(this.options.minifiedOutput){
-            css=processString(css);
-        }
-        this.addCssToDocument(css);
+        this.addPossiblyMinifiedCss(css);
     }
     //#endregion
+    
     private addToggle(){
         if(this.options.toggleConfig){
+            var toggleConfig:ToggleConfig=this.addToggleDefaults();
             this.addToggleJs();
             
-            this.addToggleCss(this.options.toggleConfig.classNames as ClassNames,this.options.toggleConfig.customCss);
+            this.addToggleCss(this.minifiedOutput, toggleConfig.classNames!,toggleConfig.customCss);
         }
     }
     //#endregion
@@ -386,11 +396,11 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
     private getTheme(){
         let themeContents:string="";
         if(this.options.customTheme){
-            themeContents=this.options.customTheme;
+            themeContents=this.getPossiblyMinifiedCss(this.options.customTheme);
         }else{
             const themePrefix="./syntaxHighlighter/shCore";
             const theme=this.options.theme?this.options.theme:"Default";
-            const themePath=themePrefix+theme+(this.options.minifiedOutput?".min":"") +".css";
+            const themePath=themePrefix+theme+(this.minifiedOutput?".min":"") +".css";
             themeContents=fs.readFileSync(themePath,"utf8");
         }
         return themeContents;
@@ -401,11 +411,17 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
     private addAdditionalCss(){
         const additionalCss=this.options.additionalCss;
         if(additionalCss){
-            const css=this.options.minifiedOutput?processString(additionalCss):additionalCss;
-            this.addCssToDocument(css);
+            this.addPossiblyMinifiedCss(additionalCss);
         }
     }
     //#endregion
+    private getPossiblyMinifiedCss(css:string){
+        return this.minifiedOutput?processString(css):css;
+    }
+    private addPossiblyMinifiedCss(css:string){
+        css=this.getPossiblyMinifiedCss(css);
+        this.addCssToDocument(css);
+    }
     private addCssToDocument(css:string){
         const style=this.document!.createElement("style");
         style.innerHTML=css;
@@ -461,7 +477,9 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
 //this was the original transform which used node globals - this procedure is not advised
 //but it is easier as not adding any scripts to the document.  Scripts cannot be removed and so getting the 
 //html from jsdom required more work the other way.
-class SyntaxHighlighterGlobalTransform extends GulpTransformBase<SyntaxHighlighterTransformOptions> {
+
+//Note that there have been some minor amendments to above that need ro be replicated here
+/* class SyntaxHighlighterGlobalTransform extends GulpTransformBase<SyntaxHighlighterTransformOptions> {
     private SyntaxHighlighter:any;
     private useMinifiedSyntaxHighlighter=true;
     private file:File|undefined;
@@ -616,7 +634,7 @@ class SyntaxHighlighterGlobalTransform extends GulpTransformBase<SyntaxHighlight
         let script=`
         (function(){
             var toggleConfig=${JSON.stringify(toggleConfig)};
-            ${toggleConfig.svgCreateToggleFn?toggleConfig.svgCreateToggleFn:this.defaultSvgCreateToggleFn()}
+            ${toggleConfig.createToggleFn?toggleConfig.createToggleFn:this.defaultSvgCreateToggleFn()}
             ${this.readToggle()}
             setUpToggle(toggleConfig);
         })()
@@ -714,4 +732,4 @@ class SyntaxHighlighterGlobalTransform extends GulpTransformBase<SyntaxHighlight
     
     //#endregion
     
-}
+} */

@@ -1,4 +1,4 @@
-declare function createSvg(show:boolean):SVGElement;
+declare function createToggleElement(show:boolean):SVGElement;
 type When="Always"|"Hidden"|"Never";
 interface ToggleConfigMessage{
     when:When,
@@ -67,17 +67,17 @@ function createToggle(highlighterElement:HTMLElement,hide:boolean,messages:Messa
         (highlighterElement.parentNode as Node).removeChild(currentEl)
         addToggle(!isHidden);
     }
-    function createSvgAndHandleClick(show:boolean){
-        const svg=createSvg(show);
-        addClickHandler(svg,svgClick);
-        addClassToSVG(svg,config.classNames.toggle);
-        addClassToSVG(svg,show?config.classNames.showToggle:config.classNames.hideToggle);
-        return svg
+    function createToggleAndHandleClick(show:boolean){
+        const toggle=createToggleElement(show);
+        addClickHandler(toggle,svgClick);
+        addClassToSVG(toggle,config.classNames.toggle);
+        addClassToSVG(toggle,show?config.classNames.showToggle:config.classNames.hideToggle);
+        return toggle
     }
        
-    const showSvg=createSvgAndHandleClick(true);
-    const hideSvg=createSvgAndHandleClick(false);
-    let currentEl:any;
+    const showElement=createToggleAndHandleClick(true);
+    const hideElement=createToggleAndHandleClick(false);
+    let currentEl:HTMLDivElement;
 
     function addToggle(hidden:boolean){
         if(currentEl&&!isHidden){
@@ -85,10 +85,10 @@ function createToggle(highlighterElement:HTMLElement,hide:boolean,messages:Messa
         }
         const messageConfig=config.message;
         isHidden=hidden;
-        var svgElement=hidden?showSvg:hideSvg;
+        
         currentEl=document.createElement("div");
         currentEl.className=config.classNames.toggleContainer;
-        currentEl.appendChild(svgElement);
+        currentEl.appendChild(hidden?showElement:hideElement);
         if(when==="Always"||when==="Hidden"&&hidden){
             const message=hidden?messages.showMessage:messages.hiddenMessage;
             if(message){
@@ -159,14 +159,9 @@ function setUpToggle(config:ToggleConfig){
             showMessage=message.showMessage!==""?message.showMessage:message.message;
             hideMessage=message.hideMessage!==""?message.hideMessage:message.message;
         }
+        showMessage=(message.prefixShow!==""?message.prefixShow:message.prefix) + showMessage;
+        hideMessage=(message.prefixHide!==""?message.prefixHide:message.prefix) + hideMessage;
         
-        if(message.prefix!==""){
-            showMessage=message.prefix + " " + showMessage;
-            hideMessage=message.prefix + " " + hideMessage;
-        }else{
-            showMessage=message.prefixShow + " " + showMessage;
-            hideMessage=message.prefixHide + " " + hideMessage;
-        }
         return {
             hiddenMessage:hideMessage,
             showMessage:showMessage
