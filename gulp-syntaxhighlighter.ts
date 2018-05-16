@@ -226,7 +226,7 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
     }
     private getShCore(){
         const shCorePath="./syntaxHighlighter/shCore" + (this.useMinifiedSyntaxHighlighter?".min.js":".js");
-        return fs.readFileSync(shCorePath,"utf8");
+        return fs.readFileSync(path.resolve(__dirname,shCorePath),"utf8");
     }
     private getBrushFiles(){
         return getFilesWithExtensionFromDir(path.resolve(__dirname,"syntaxHighlighter"),(f=>{
