@@ -1,0 +1,130 @@
+<script data-toggleHideMessage="Hide - plugin options that created this file" data-toggleShowMessage="Show  - plugin options that created this file" type="syntaxhighlighter" class="brush: js;highlight:[3,4,5,6,7,8,9,10,11,12,13,14,20,22,23,24,25,26,27,28,29,30,31,32]">
+    gulp.src(srcFile).pipe(syntaxHighlighter(
+        {
+            globalParams:{
+                highlight:[1],
+                gutter:false
+            },
+            config:{
+                tagName:"mine"
+            },
+            additionalCss:".syntaxhighlighter{width:600 !important}",
+            theme:"Midnight",
+            isPartialFn:function(){
+                return false;
+            },
+            toggleConfig:{
+                toggleState:"Show",
+                message:{
+                    message:"Message",
+                    when:"Always",
+                    placement:"Below"
+                },
+                customCss:".t_toggle{ stroke:orange;top:0.125em;position:relative;height:1em;width:1em }" +
+                ".t_toggleText{ font-size:1em}" + 
+                ".t_toggleContainer{ border-style: solid;border-width:2;border-color:red}",
+                classNames:{
+                    hideToggle:"t_hideToggle",
+                    toggleText:"t_toggleText",
+                    isShowing:"t_isShowing",
+                    showToggle:"t_showToggle",
+                    toggle:"t_toggle",
+                    toggleContainer:"t_toggleContainer"
+                }
+                
+            }
+
+        })).pipe(gulp.dest("destPluginTest"));
+</script>
+<h1>Custom settings:</h1>
+<div>Custom isPartialFn - always returning false.  Despite the src being loose html it has been transformed to have html, head and body elements.</div>
+<div>The placement of toggle text is Below. </div>
+<div>There are custom classNames, customCSS to color the default toggle SVG stroke, the Midnight theme and additionalCss to override syntax highlighter css.</div>
+<br/>
+
+<br/>
+<h1>Syntax highlighter Config</h1>
+<div>Below had a tag name of mine - has been transformed due to the config tagName property being set to mine.</div>
+<mine data-toggleMessage="Show from global" type="syntaxhighlighter" class="brush: ts">
+    import {PluginError,File,GulpPluginWithOptionalOptions, TransformOptions} from './gulpHelpers';
+</mine>
+
+<h1>Syntax Highlighter Global params</h1>
+<div>Has been set to highlight line 1 and to not show line numbers for all that do not set in the html</div>
+<div>Below overrides the highlighting.</div>
+<br/>
+
+
+<script data-toggleMessage="Show from global" type="syntaxhighlighter" class="brush: ts;highlight:[]">
+    import {PluginError,File,GulpPluginWithOptionalOptions, TransformOptions} from './gulpHelpers';
+</script>
+
+<h1>Toggle state:</h1>
+<div>All examples derive the show/hide message from the data-toggleMessage</div>
+
+
+<script data-toggleMessage="Show from global" type="syntaxhighlighter" class="brush: ts">
+    import {PluginError,File,GulpPluginWithOptionalOptions, TransformOptions} from './gulpHelpers';
+</script>
+
+<div>Specifies data-toggleState - Never.</div>
+<script data-toggleState="Never" type="syntaxhighlighter" class="brush: ts">
+    import {PluginError,File,GulpPluginWithOptionalOptions, TransformOptions} from './gulpHelpers';
+</script>
+
+
+<script data-toggleState="Hide" data-toggleMessage="data-toggleState='Hide'"  type="syntaxhighlighter" class="brush: ts">
+    import {PluginError,File,GulpPluginWithOptionalOptions, TransformOptions} from './gulpHelpers';
+</script>
+
+<h1>When</h1>
+<script data-toggleMessage="Always from global"  type="syntaxhighlighter" class="brush: ts">
+    import {PluginError,File,GulpPluginWithOptionalOptions, TransformOptions} from './gulpHelpers';
+</script>
+<div>data-toggleWhen="Never"</div>
+<script data-toggleWhen="Never" data-toggleMessage="Never from data-toggleWhen"  type="syntaxhighlighter" class="brush: ts">
+    import {PluginError,File,GulpPluginWithOptionalOptions, TransformOptions} from './gulpHelpers';
+</script>
+<div>data-toggleWhen="Hidden"</div>
+<script data-toggleWhen="Hidden" data-toggleMessage="Hidden from data-toggleWhen"  type="syntaxhighlighter" class="brush: ts">
+    import {PluginError,File,GulpPluginWithOptionalOptions, TransformOptions} from './gulpHelpers';
+</script>
+
+
+<h1>Text with no prefixes</h1>
+
+
+<div>Uses the title for show and hide messages</div>
+<script data-toggleUseTitle="true" type="syntaxhighlighter" class="brush: ts;title:'This is the title'">
+    import {PluginError,File,GulpPluginWithOptionalOptions, TransformOptions} from './gulpHelpers';
+</script>
+
+<div>Show and hide messages from data-toggleMessage</div>
+<script type="syntaxhighlighter" data-toggleMessage="Same for both" class="brush: ts">
+    import {PluginError,File,GulpPluginWithOptionalOptions, TransformOptions} from './gulpHelpers';
+</script>
+
+<div>Show and hide messages from data-toggleShowMessage, data-toggleHideMessage</div>
+<script type="syntaxhighlighter" data-toggleShowMessage="Show" data-toggleHideMessage="Hide" class="brush: ts">
+    import {PluginError,File,GulpPluginWithOptionalOptions, TransformOptions} from './gulpHelpers';
+</script>
+<div>Show defaulting to global message,hide message from data-toggleHideMessage</div>
+<script type="syntaxhighlighter" data-toggleHideMessage="Hide" class="brush: ts">
+    import {PluginError,File,GulpPluginWithOptionalOptions, TransformOptions} from './gulpHelpers';
+</script>
+
+<h1>Text prefixing</h1>
+
+<div>data-togglePrefixShow and data-togglePrefixHide on the title</div>
+<script data-togglePrefixHide="Hide - " data-togglePrefixShow="Show - " data-toggleUseTitle="true" type="syntaxhighlighter" class="brush: ts;title:'This is the title'">
+    import {PluginError,File,GulpPluginWithOptionalOptions, TransformOptions} from './gulpHelpers';
+</script>
+<div>data-togglePrefix for both show and hide - on the title</div>
+<script data-togglePrefix="Toggle - " data-toggleUseTitle="true" type="syntaxhighlighter" class="brush: ts;title:'This is the title'">
+    import {PluginError,File,GulpPluginWithOptionalOptions, TransformOptions} from './gulpHelpers';
+</script>
+<div>data-togglePrefix for show and data-togglePrefixHide - on data-toggleShowMessage, data-toggleHideMessage</div>
+<script data-toggleShowMessage="The Hidden Code" data-toggleHideMessage="The Shown Code" data-togglePrefix="Toggle - " data-togglePrefixHide="Hide - " type="syntaxhighlighter" class="brush: ts;title:'This is the title'">
+    import {PluginError,File,GulpPluginWithOptionalOptions, TransformOptions} from './gulpHelpers';
+</script>
+

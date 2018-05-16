@@ -200,4 +200,4 @@ If this is not desired ( perhaps you want to change the stroke colour or perhaps
 
 ## Testing
 
-This has not yet been tested.
+This has not yet been tested in the traditional sense but you can download the project from github and run gulp demo.  Demo/dest will have two html files that have been transformed by the plugin each with different plugin options chosen to cover all functionality.
