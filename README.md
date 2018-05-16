@@ -198,6 +198,18 @@ private getDefaultToggleCss(classNames:ClassNames):string{
 
 If this is not desired ( perhaps you want to change the stroke colour or perhaps you provided your own createToggleFn ) then you can supply your own with the ToggleConfig.customCss.
 
-## Testing
+## Testing / Demo
 
 This has not yet been tested in the traditional sense but you can download the project from github and run gulp demo.  Demo/dest will have two html files that have been transformed by the plugin each with different plugin options chosen to cover all functionality.
+
+## To Do
+
+Make placement overridable in the html ?
+I had removed config strings as at first glance did not think that they were applicable.  Check in depth.
+Because the syntax highlighter project is old ( it has been replaced with version 4 which failed to build miserably ) there are two css settings that have vendor prfixes that can be replaced.  This needs to be done [here](https://github.com/tonyhallett/syntaxhighlighter-3.0.90).
+Provide code copying functionality.
+Facility to provide custom brushes.
+
+Do tests.
+
+
