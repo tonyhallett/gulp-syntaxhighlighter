@@ -211,5 +211,3 @@ Provide code copying functionality.
 Facility to provide custom brushes.
 
 Do tests.
-
-
