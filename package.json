@@ -1,6 +1,6 @@
 {
   "name": "gulp-syntaxhighlighter",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Apply syntax highlighter at build time - if hiding/showing is required adds small amount of javascript and css",
   "main": "gulp-syntaxhighlighter.js",
   "types": "gulp-syntaxhighlighter.ts",
