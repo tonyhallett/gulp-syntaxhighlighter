@@ -406,7 +406,7 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
         if(this.options.customTheme){
             themeContents=this.getPossiblyMinifiedCss(this.options.customTheme);
         }else{
-            const themePrefix="./syntaxHighlighter/shCore";
+            const themePrefix=path.resolve(__dirname,"./syntaxHighlighter/shCore");
             const theme=this.options.theme?this.options.theme:"Default";
             const themePath=themePrefix+theme+(this.minifiedOutput?".min":"") +".css";
             themeContents=fs.readFileSync(themePath,"utf8");
