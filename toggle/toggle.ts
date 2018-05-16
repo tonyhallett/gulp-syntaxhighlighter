@@ -125,6 +125,8 @@ function setUpToggle(config:ToggleConfig){
             toggleState=ToggleState.Show;
         }else if(dataToggle==="Hide"){
             toggleState=ToggleState.Hide;
+        }else if(dataToggle==="Never"){
+            toggleState=ToggleState.Never;
         }else{
             if(config.toggleState==="Show"){
                 toggleState=ToggleState.Show;

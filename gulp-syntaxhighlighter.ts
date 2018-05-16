@@ -44,7 +44,7 @@ export interface SyntaxHighlighterOptions{
     theme?:string,
     customTheme?:string,
     additionalCss?:string,
-    globalParams:{
+    globalParams?:{
         /** Additional CSS class names to be added to highlighter elements. */
         /** default '' */
         "class-name"?:string,
@@ -167,6 +167,7 @@ function getFilesWithExtensionFromDir(startPath:string,filter:(path:string)=>boo
 };
 export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighlighterTransformOptions> {
     private removableScriptClassName="__removableScript";
+    private globalParams={};
     private useMinifiedSyntaxHighlighter=true;
     private minifiedOutput=true;
     private file:File|undefined;
@@ -185,25 +186,32 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
         if(this.options.isPartialFn){
             this.isPartial=this.options.isPartialFn;
         }
+        if(this.options.globalParams){
+            this.globalParams=this.options.globalParams;
+        }
     }
     
     private applySyntaxHighlighter(){
-        (this.options.globalParams as any).toolbar=false;
+        (this.globalParams as any).toolbar=false;
         const highlightScript=`
         function merge(obj1, obj2)
         {
+            
             var result = {}, name;
-
+            
             for (name in obj1)
                 result[name] = obj1[name];
 
             for (name in obj2)
                 result[name] = obj2[name];
+            
 
             return result;
         };
-        SyntaxHighlighter.config=merge(SyntaxHighlighter.config,${this.options.config})
-        SyntaxHighlighter.highlight(${JSON.stringify(this.options.globalParams)});
+        
+        SyntaxHighlighter.config=merge(SyntaxHighlighter.config,${JSON.stringify(this.options.config)})
+       
+        SyntaxHighlighter.highlight(${JSON.stringify(this.globalParams)});
         `
         this.addRemovableScriptElement(highlightScript);
         this.addCss();
@@ -299,7 +307,7 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
     //#region toggle js
     private defaultCreateToggleFn():string{
         return `
-        function createToggleElements(show){//much easier through path
+        function createToggleElement(show){//much easier through path
             var xmlns="http://www.w3.org/2000/svg"
 
             var svg=document.createElementNS(xmlns,"svg");
@@ -390,8 +398,8 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
     
     //#region sh css
     private addCss(){
-        this.addAdditionalCss();
         this.addTheme();
+        this.addAdditionalCss();
     }
     private getTheme(){
         let themeContents:string="";
