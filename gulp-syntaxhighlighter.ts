@@ -382,7 +382,7 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
         `
     }
     
-    private addToggleCss(minifiedOutput:boolean,classNames:ClassNames,customCss?:string){
+    private addToggleCss(classNames:ClassNames,customCss?:string){
         let css:string=customCss?customCss:this.getDefaultToggleCss(classNames);
         this.addPossiblyMinifiedCss(css);
     }
@@ -393,7 +393,7 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
             var toggleConfig:ToggleConfig=this.addToggleDefaults();
             this.addToggleJs();
             
-            this.addToggleCss(this.minifiedOutput, toggleConfig.classNames!,toggleConfig.customCss);
+            this.addToggleCss(toggleConfig.classNames!,toggleConfig.customCss);
         }
     }
     //#endregion
