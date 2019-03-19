@@ -252,7 +252,7 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
         SyntaxHighlighter.highlight(${JSON.stringify(this.globalParams)});
         `
         this.addRemovableScriptElement(highlightScript);
-        this.addCss();
+        
     }
     
     //#region loading scripts into jsdom
@@ -263,7 +263,7 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
         this.document!.body.appendChild(scriptEl);
     }
     
-    private loadSyntaxHighlighterScripts() {
+    private addSyntaxHighlighterScripts() {
         const scripts = this._assetLoader.getScripts(this.useMinifiedSyntaxHighlighter);
         scripts.forEach(s=>this.addRemovableScriptElement(s));
     }
@@ -272,12 +272,17 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
         this.html=html;
         this.dom=new JSDOM(html,{ runScripts: "dangerously" });
         this.document=this.dom.window.document;
-        this.loadSyntaxHighlighterScripts();
+        
+    }
+    private setUpSyntaxHighlighter() {
+        this.addSyntaxHighlighterScripts();
+        this.addSyntaxHighlighterCss();
     }
     protected transformBufferFile(file: File, contents: Buffer, encoding: string, cb: TransformCallback): void {
         this.file=file;
         
         this.setUpDocument(contents.toString("utf8"));
+        this.setUpSyntaxHighlighter();
         this.addToggle();
         this.applySyntaxHighlighter();
         
@@ -427,7 +432,7 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
     //#endregion
     
     //#region sh css
-    private addCss(){
+    private addSyntaxHighlighterCss(){
         this.addTheme();
         this.addAdditionalCss();
     }
