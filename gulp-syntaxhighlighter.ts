@@ -9,7 +9,9 @@ import { GulpTransformBase,File,GulpTransformBaseOptions,TransformCallback,Plugi
 
 export function syntaxHighlighter(options?:SyntaxHighlighterOptions){
     const transformOptions=Object.assign(options,{supportsBuffer:true,supportsStream:false,pluginName:"gulp-syntaxhighlighter"});
-    return new SyntaxHighlighterTransform(transformOptions);
+    var sht = new SyntaxHighlighterTransform(transformOptions);
+    sht._setDependencies(new SyntaxHighlighterAssetLoader());
+    return sht;
 }
 
 export interface ToggleConfigMessage{
@@ -37,8 +39,7 @@ export interface ToggleConfig{
     createToggleFn?:string,
     classNames?:ClassNames,
     customCss?:string
-}
-export interface SyntaxHighlighterOptions{
+}export interface SyntaxHighlighterOptions{
     isPartialFn?:(html:string,file:File)=>boolean
     useMinifiedSyntaxHighlighter?:boolean
     minifiedOutput?:boolean
@@ -166,6 +167,29 @@ function getFilesWithExtensionFromDir(startPath:string,filter:(path:string)=>boo
     return paths;
 };
 
+interface ISyntaxHighlighterAssetLoader {
+    getScripts(minified: boolean): string[];
+}
+class SyntaxHighlighterAssetLoader implements ISyntaxHighlighterAssetLoader{
+    getScripts(minified: boolean): string[] {
+        return [this.getShCore(minified)].concat(this.getBrushFiles(minified).map(f => fs.readFileSync(f, "utf8")));
+    }
+    private getShCore(minified: boolean) {
+        const shCorePath = "./syntaxHighlighter/shCore" + this.getJsExtension(minified);
+        return fs.readFileSync(path.resolve(__dirname, shCorePath), "utf8");
+    }
+    private getBrushFiles(minified: boolean) {
+        return getFilesWithExtensionFromDir(path.resolve(__dirname, "syntaxHighlighter"), (f => {
+            return f.indexOf("shBrush") !== -1 && f.endsWith(this.getJsExtension(minified));
+        }));
+    }
+    private getJsExtension(minified: boolean) {
+        return minified ? ".min.js" : ".js";
+    }
+
+
+}
+
 export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighlighterTransformOptions> {
     private removableScriptClassName="__removableScript";
     private globalParams={};
@@ -175,7 +199,9 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
     private document:Document|undefined;
     private dom:JSDOM|undefined;
     private html:string=""
-    
+
+    private _assetLoader!: ISyntaxHighlighterAssetLoader;
+
     constructor(options:SyntaxHighlighterOptions){
         super(options);
         //override defaults from options if provided
@@ -192,7 +218,9 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
             this.globalParams=this.options.globalParams;
         }
     }
-    
+    public _setDependencies(assetLoader: ISyntaxHighlighterAssetLoader): void {
+        this._assetLoader = assetLoader;
+    }
     private applySyntaxHighlighter(){
         (this.globalParams as any).toolbar=false;
         const highlightScript=`
@@ -226,17 +254,9 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
         scriptEl.className=this.removableScriptClassName;
         this.document!.body.appendChild(scriptEl);
     }
-    private getShCore(){
-        const shCorePath="./syntaxHighlighter/shCore" + (this.useMinifiedSyntaxHighlighter?".min.js":".js");
-        return fs.readFileSync(path.resolve(__dirname,shCorePath),"utf8");
-    }
-    private getBrushFiles(){
-        return getFilesWithExtensionFromDir(path.resolve(__dirname,"syntaxHighlighter"),(f=>{
-            return f.indexOf("shBrush")!==-1&&(this.useMinifiedSyntaxHighlighter?f.endsWith(".min.js"):!f.endsWith(".min.js"));
-        }));
-    }
-    private loadSyntaxHighlighterScripts(){
-        const scripts=[this.getShCore()].concat(this.getBrushFiles().map(f=>fs.readFileSync(f,"utf8")));
+    
+    private loadSyntaxHighlighterScripts() {
+        const scripts = this._assetLoader.getScripts(this.useMinifiedSyntaxHighlighter);
         scripts.forEach(s=>this.addRemovableScriptElement(s));
     }
     //#endregion
