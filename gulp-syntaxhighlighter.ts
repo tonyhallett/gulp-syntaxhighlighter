@@ -178,6 +178,7 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
     
     constructor(options:SyntaxHighlighterOptions){
         super(options);
+        //override defaults from options if provided
         if(this.options.minifiedOutput!==undefined){
             this.minifiedOutput=this.options.minifiedOutput
         }
@@ -450,6 +451,7 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
         }
         return html;
     }
+    //default isPartial
     private isPartial=function(html:string,file:File){
         const firstTag=html.substring(html.indexOf("<"),html.indexOf(">")).toLowerCase();
         return !(firstTag.startsWith("<!doctype")||firstTag.startsWith("<html")||firstTag.startsWith("<head")||firstTag.startsWith("<body"));
