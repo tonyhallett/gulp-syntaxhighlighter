@@ -169,6 +169,7 @@ function getFilesWithExtensionFromDir(startPath:string,filter:(path:string)=>boo
 
 interface ISyntaxHighlighterAssetLoader {
     getScripts(minified: boolean): string[];
+    getTheme(minified: boolean,theme:string): string;
 }
 class SyntaxHighlighterAssetLoader implements ISyntaxHighlighterAssetLoader{
     getScripts(minified: boolean): string[] {
@@ -186,7 +187,12 @@ class SyntaxHighlighterAssetLoader implements ISyntaxHighlighterAssetLoader{
     private getJsExtension(minified: boolean) {
         return minified ? ".min.js" : ".js";
     }
-
+    getTheme(minified: boolean,theme:string):string {
+        const themePrefix = path.resolve(__dirname, "./syntaxHighlighter/shCore");
+        
+        const themePath = themePrefix + theme + (minified ? ".min" : "") + ".css";
+        return fs.readFileSync(themePath, "utf8");
+    }
 
 }
 
@@ -430,10 +436,7 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
         if(this.options.customTheme){
             themeContents=this.getPossiblyMinifiedCss(this.options.customTheme);
         }else{
-            const themePrefix=path.resolve(__dirname,"./syntaxHighlighter/shCore");
-            const theme=this.options.theme?this.options.theme:"Default";
-            const themePath=themePrefix+theme+(this.minifiedOutput?".min":"") +".css";
-            themeContents=fs.readFileSync(themePath,"utf8");
+            themeContents = this._assetLoader.getTheme(this.minifiedOutput, this.options.theme ? this.options.theme : "Default")
         }
         return themeContents;
     }
