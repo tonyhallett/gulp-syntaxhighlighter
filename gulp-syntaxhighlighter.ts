@@ -11,6 +11,7 @@ export function syntaxHighlighter(options?:SyntaxHighlighterOptions){
     const transformOptions=Object.assign(options,{supportsBuffer:true,supportsStream:false,pluginName:"gulp-syntaxhighlighter"});
     return new SyntaxHighlighterTransform(transformOptions);
 }
+
 export interface ToggleConfigMessage{
     when?:"Always"|"Hidden"|"Never",
     prefix?:string,
@@ -143,9 +144,8 @@ export interface SyntaxHighlighterOptions{
     //if not present then no toggle js/css
     toggleConfig?:ToggleConfig
 }
-export interface SyntaxHighlighterTransformOptions extends GulpTransformBaseOptions, SyntaxHighlighterOptions{
-    
-}
+export interface SyntaxHighlighterTransformOptions extends GulpTransformBaseOptions, SyntaxHighlighterOptions{ }
+
 function getFilesWithExtensionFromDir(startPath:string,filter:(path:string)=>boolean,paths:string[]=[]){
     if (!fs.existsSync(startPath)){
         console.log("no dir ",startPath);
@@ -165,6 +165,7 @@ function getFilesWithExtensionFromDir(startPath:string,filter:(path:string)=>boo
     };
     return paths;
 };
+
 export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighlighterTransformOptions> {
     private removableScriptClassName="__removableScript";
     private globalParams={};
