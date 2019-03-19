@@ -3,3 +3,5 @@ gulp-syntaxhighlighter.js
 gulp-syntaxhighlighter.d.ts
 toggle/toggle.js
 demo/dest
+/.vs/config
+/.vs
