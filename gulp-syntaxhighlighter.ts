@@ -191,10 +191,12 @@ class SyntaxHighlighterAssetLoader implements ISyntaxHighlighterAssetLoader{
 }
 
 export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighlighterTransformOptions> {
-    private removableScriptClassName="__removableScript";
+    private removableScriptClassName = "__removableScript";
+
     private globalParams={};
     private useMinifiedSyntaxHighlighter=true;
-    private minifiedOutput=true;
+    private minifiedOutput = true;
+
     private file:File|undefined;
     private document:Document|undefined;
     private dom:JSDOM|undefined;
