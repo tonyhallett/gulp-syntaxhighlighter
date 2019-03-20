@@ -11,7 +11,8 @@
     "toggle/toggle.js"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "tsc": "tsc"
   },
   "author": {
     "name": "Tony Hallett",
@@ -30,13 +31,32 @@
     "@types/jsdom": "^11.0.4",
     "@types/uglify-js": "^3.0.2",
     "@types/uglifycss": "0.0.5",
-    "gulptransformbase": "^1.0.3",
+    "gulptransformbase": "^1.0.6",
     "jsdom": "^11.10.0",
     "uglify-js": "^3.3.24",
     "uglifycss": "0.0.29"
   },
   "devDependencies": {
+    "@types/jest": "^24.0.11",
     "@types/node": "^9.6.7",
-    "gulp": "^4.0.0"
+    "gulp": "^4.0.0",
+    "jest": "^24.5.0",
+    "ts-jest": "^24.0.0",
+    "typescript": "^3.3.4000"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "collectCoverage": true
   }
 }
