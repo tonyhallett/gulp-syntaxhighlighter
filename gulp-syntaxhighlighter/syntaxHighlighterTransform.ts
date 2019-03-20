@@ -1,5 +1,5 @@
 import { GulpTransformBase, File, GulpTransformBaseOptions, TransformCallback } from "gulptransformbase"
-import { IJsDomDocument, IMinifier, IJsDomDocumentFactory, ISyntaxHighlighterDocumentManagerFactory, ISyntaxHighlighterAssetLoader } from './interfaces'
+import { IJsDomDocument, IMinifier, IJsDomDocumentFactory, ISyntaxHighlighterDocumentManagerFactory, ISyntaxHighlighterAssetLoader,IToggleDocumentManagerFactory } from './interfaces'
 import { SyntaxHighlighterOptions, SyntaxHighlighterTransformOptions} from './publicInterfaces'
 export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighlighterTransformOptions> {
 
@@ -19,27 +19,33 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
     private jsDomDocument!: IJsDomDocument
 
     constructor(options: SyntaxHighlighterOptions, private readonly assetLoader: ISyntaxHighlighterAssetLoader, private readonly minifier: IMinifier, private readonly jsDomDocumentFactory: IJsDomDocumentFactory, private readonly syntaxHighlighterDocumentManagerFactory: ISyntaxHighlighterDocumentManagerFactory, private readonly toggleDocumentManagerFactory: IToggleDocumentManagerFactory) {
-        super(options);
+        super(options,
+            {
+                supportsBuffer: true,
+                supportsStream: false,
+                pluginName: "gulp-syntaxhighlighter"
+            }
+        );
         //override defaults from options if provided
-        if (this.options.minifiedOutput !== undefined) {
-            this.minifiedOutput = this.options.minifiedOutput
+        if (options!.minifiedOutput !== undefined) {
+            this.minifiedOutput = options!.minifiedOutput
         }
         this.minifier.initialize(this.minifiedOutput);
 
-        if (this.options.useMinifiedSyntaxHighlighter !== undefined) {
-            this.useMinifiedSyntaxHighlighter = this.options.useMinifiedSyntaxHighlighter;
+        if (options.useMinifiedSyntaxHighlighter !== undefined) {
+            this.useMinifiedSyntaxHighlighter = options.useMinifiedSyntaxHighlighter;
         }
-        if (this.options.isPartialFn) {
-            this.isPartial = this.options.isPartialFn;
+        if (options.isPartialFn) {
+            this.isPartial = options.isPartialFn;
         }
-        if (this.options.globalParams) {
-            this.globalParams = this.options.globalParams;
+        if (options.globalParams) {
+            this.globalParams = options.globalParams;
         }
-        if (this.options.theme) {
-            this.themeName = this.options.theme;
+        if (options.theme) {
+            this.themeName = options.theme;
         }
-        if (this.options.useMinifiedSyntaxHighlighter) {
-            this.useMinifiedSyntaxHighlighter = this.options.useMinifiedSyntaxHighlighter;
+        if (options.useMinifiedSyntaxHighlighter) {
+            this.useMinifiedSyntaxHighlighter = options.useMinifiedSyntaxHighlighter;
         }
 
     }
@@ -59,8 +65,8 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
     }
 
     private setUpToggle() {
-        if (this.options.toggleConfig) {
-            var toggleDocumentManager = this.toggleDocumentManagerFactory.create(this.jsDomDocument, this.minifier, this.options.toggleConfig);
+        if (this.options!.toggleConfig) {
+            var toggleDocumentManager = this.toggleDocumentManagerFactory.create(this.jsDomDocument, this.minifier, this.options!.toggleConfig);
             toggleDocumentManager.addToggle();
         }
     }
@@ -68,15 +74,15 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
     private setUpSyntaxHighlighter() {
         var syntaxHighlighterDocumentManager = this.syntaxHighlighterDocumentManagerFactory.create(this.jsDomDocument, this.minifier, this.assetLoader);
         syntaxHighlighterDocumentManager.addSyntaxHighlighterScripts(this.useMinifiedSyntaxHighlighter)
-        if (this.options.customTheme) {
-            syntaxHighlighterDocumentManager.addCustomTheme(this.options.customTheme);
+        if (this.options!.customTheme) {
+            syntaxHighlighterDocumentManager.addCustomTheme(this.options!.customTheme);
         } else {
             syntaxHighlighterDocumentManager.addNamedTheme(this.themeName);
         }
-        if (this.options.additionalCss) {
-            syntaxHighlighterDocumentManager.addAdditionalCss(this.options.additionalCss);
+        if (this.options!.additionalCss) {
+            syntaxHighlighterDocumentManager.addAdditionalCss(this.options!.additionalCss);
         }
-        syntaxHighlighterDocumentManager.applySyntaxHighlighter(this.globalParams, this.options.config);
+        syntaxHighlighterDocumentManager.applySyntaxHighlighter(this.globalParams, this.options!.config);
     }
 
     private getNewContents() {

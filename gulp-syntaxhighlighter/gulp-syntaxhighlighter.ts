@@ -7,16 +7,9 @@ import { ToggleDocumentManagerFactory } from './toggleDocumentManagerFactory'
 import { SyntaxHighlighterOptions } from './publicInterfaces'
 
 export function syntaxHighlighter(options?: SyntaxHighlighterOptions) {
-    const transformOptions = Object.assign(
-        options,
-        {
-            supportsBuffer: true,
-            supportsStream: false,
-            pluginName: "gulp-syntaxhighlighter"
-        });
-
+    options=options?options:{};
     return new SyntaxHighlighterTransform(
-        transformOptions,
+        options,
         new SyntaxHighlighterAssetLoader(),
         new Minifier(),
         new JsDomDocumentFactory(),
