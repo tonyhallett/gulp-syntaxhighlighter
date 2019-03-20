@@ -1,7 +1,10 @@
 node_modules
-gulp-syntaxhighlighter.js
-gulp-syntaxhighlighter.d.ts
+coverage
+**/*.d.ts
 toggle/toggle.js
+**/*.js
+**/*.d.ts
+!toggle/toggleDefns.d.ts
 demo/dest
 /.vs/config
 /.vs
