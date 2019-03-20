@@ -8,47 +8,97 @@ interface HideShowMessages {
     hiddenMessage: string
 }
 
-function setUpToggle(config: ToggleConfig) {
-    //attribute or config
-    function getToggleState(syntaxHighlighter: HTMLElement) {
-        const dataToggle = syntaxHighlighter.getAttribute("data-toggleState");
-        let toggleState: ToggleState = ToggleState.Never;
-        if (dataToggle === "Show") {
+type HideShowMessagesWhen = HideShowMessages & {
+    when:When
+}
+
+//attribute or config
+function getToggleState(syntaxHighlighter: HTMLElement, toggleConfig: ToggleConfig) {
+    const dataToggle = syntaxHighlighter.getAttribute("data-toggleState");
+    let toggleState: ToggleState = ToggleState.Never;
+    if (dataToggle === "Show") {
+        toggleState = ToggleState.Show;
+    } else if (dataToggle === "Hide") {
+        toggleState = ToggleState.Hide;
+    } else if (dataToggle === "Never") {
+        toggleState = ToggleState.Never;
+    } else {
+        if (toggleConfig.toggleState === "Show") {
             toggleState = ToggleState.Show;
-        } else if (dataToggle === "Hide") {
+        } else if (toggleConfig.toggleState === "Hide") {
             toggleState = ToggleState.Hide;
-        } else if (dataToggle === "Never") {
-            toggleState = ToggleState.Never;
+        }
+    }
+    return toggleState;
+}
+
+function createToggle(highlighterElement: HTMLElement, hide: boolean, messages: HideShowMessages, when: When, placement: ToggleConfigMessage["placement"], classNames: ClassNames) {
+    let isHidden = false
+    function svgClick() {
+        (highlighterElement.parentNode as Node).removeChild(currentEl)
+        addToggle(!isHidden);
+    }
+    function createToggleAndHandleClick(show: boolean) {
+        const toggle = createToggleElement(show);
+        addClickHandler(toggle, svgClick);
+        addClassToSVG(toggle, classNames.toggle);
+        addClassToSVG(toggle, show ? classNames.showToggle : classNames.hideToggle);
+        return toggle
+    }
+
+    const showElement = createToggleAndHandleClick(true);
+    const hideElement = createToggleAndHandleClick(false);
+    let currentEl: HTMLDivElement;
+
+    function addToggle(hidden: boolean) {
+        if (currentEl && !isHidden) {
+            removeClass(currentEl, classNames.isShowing);
+        }
+
+        isHidden = hidden;
+
+        currentEl = document.createElement("div");
+        currentEl.className = classNames.toggleContainer;
+        currentEl.appendChild(hidden ? showElement : hideElement);
+        if (when === "Always" || when === "Hidden" && hidden) {
+            const message = hidden ? messages.showMessage : messages.hiddenMessage;
+            if (message) {
+                var textEl = document.createElement(placement === "Below" ? "div" : "span");
+                textEl.className = classNames.toggleText;
+                textEl.innerHTML = message;
+
+                currentEl.appendChild(textEl);
+            }
+        }
+        (highlighterElement.parentNode as Node).insertBefore(currentEl, highlighterElement);
+
+        if (hidden) {
+            addClass(highlighterElement, "collapsed");
         } else {
-            if (config.toggleState === "Show") {
-                toggleState = ToggleState.Show;
-            } else if (config.toggleState === "Hide") {
-                toggleState = ToggleState.Hide;
-            }
+            addClass(currentEl, classNames.isShowing);
+            removeClass(highlighterElement, "collapsed");
         }
-        return toggleState;
     }
 
-    //attribute or config
-    function getMessages(syntaxHighlighter: HTMLElement) {
-        const messageConfig = { ...config.message } as any;
-        var messageNames = Object.getOwnPropertyNames(messageConfig);
-        for (var i = 0; i < messageNames.length; i++) {
-            var messageName = messageNames[i];
-            var dataValue = syntaxHighlighter.getAttribute("data-toggle" + messageName);
-            if (dataValue !== null) {
-                messageConfig[messageName] = dataValue;
-            }
-        }
-        return messageConfig as ToggleConfigMessage;
-    }
+    addToggle(hide);
+}
 
-    function getHideShowMessages(message: ToggleConfigMessage, syntaxhighlighter: HTMLElement): HideShowMessages {
+function getHideShowMessages(syntaxHighlighter: HTMLElement, toggleConfigMessage: ToggleConfigMessage): HideShowMessagesWhen {
+    function getHideShowMessages(message: ToggleConfigMessage): HideShowMessages {
+        function getCaption() {
+            var caption = (syntaxHighlighter.children[0] as HTMLTableElement).caption;
+            if (caption) {
+                const text = caption.textContent;
+                return text !== null ? text : "";
+            }
+            return "";
+        }
+
         let showMessage = "";
         let hideMessage = "";
 
         if (message.useTitle) {
-            const caption = getCaption(syntaxHighlighter)
+            const caption = getCaption()
 
             showMessage = caption;
             hideMessage = caption;
@@ -65,88 +115,44 @@ function setUpToggle(config: ToggleConfig) {
         }
     }
 
-    const syntaxHighlighters = <HTMLCollectionOf<HTMLElement>>window.document.getElementsByClassName("syntaxhighlighter");
-    for (let i = 0; i < syntaxHighlighters.length; i++) {
-
-        var syntaxHighlighter = syntaxHighlighters[i];
-        const toggleState = getToggleState(syntaxHighlighter);
-        if (toggleState !== ToggleState.Never) {
-            const messages = getMessages(syntaxHighlighter);
-            const show = toggleState === ToggleState.Show;
-            createToggle(syntaxHighlighter, !show, getHideShowMessages(messages, syntaxHighlighter), messages.when, config);
-        }
-    }
-}
-
-function createToggle(highlighterElement: HTMLElement, hide: boolean, messages: HideShowMessages, when: When, config: ToggleConfig) {
-    let isHidden = false
-    function svgClick() {
-        (highlighterElement.parentNode as Node).removeChild(currentEl)
-        addToggle(!isHidden);
-    }
-    function createToggleAndHandleClick(show: boolean) {
-        const toggle = createToggleElement(show);
-        addClickHandler(toggle, svgClick);
-        addClassToSVG(toggle, config.classNames.toggle);
-        addClassToSVG(toggle, show ? config.classNames.showToggle : config.classNames.hideToggle);
-        return toggle
-    }
-
-    const showElement = createToggleAndHandleClick(true);
-    const hideElement = createToggleAndHandleClick(false);
-    let currentEl: HTMLDivElement;
-
-    function addToggle(hidden: boolean) {
-        if (currentEl && !isHidden) {
-            removeClass(currentEl, config.classNames.isShowing);
-        }
-        const messageConfig = config.message;
-        isHidden = hidden;
-
-        currentEl = document.createElement("div");
-        currentEl.className = config.classNames.toggleContainer;
-        currentEl.appendChild(hidden ? showElement : hideElement);
-        if (when === "Always" || when === "Hidden" && hidden) {
-            const message = hidden ? messages.showMessage : messages.hiddenMessage;
-            if (message) {
-                var textEl = document.createElement(messageConfig.placement === "Below" ? "div" : "span");
-                textEl.className = config.classNames.toggleText;
-                textEl.innerHTML = message;
-
-                currentEl.appendChild(textEl);
+    //attribute or config
+    function getMessages() {
+        const messageConfig = { ...toggleConfigMessage } as any;
+        var messageNames = Object.getOwnPropertyNames(messageConfig);
+        for (var i = 0; i < messageNames.length; i++) {
+            var messageName = messageNames[i];
+            var dataValue = syntaxHighlighter.getAttribute("data-toggle" + messageName);
+            if (dataValue !== null) {
+                messageConfig[messageName] = dataValue;
             }
         }
-        (highlighterElement.parentNode as Node).insertBefore(currentEl, highlighterElement);
-
-        if (hidden) {
-            addClass(highlighterElement, "collapsed");
-        } else {
-            addClass(currentEl, config.classNames.isShowing);
-            removeClass(highlighterElement, "collapsed");
-        }
+        return messageConfig as ToggleConfigMessage;
     }
 
-    addToggle(hide);
+    var messages = getMessages()
+    var hideShowMessages = getHideShowMessages(messages);
+    return { when: messages.when, showMessage: hideShowMessages.showMessage, hiddenMessage: hideShowMessages.hiddenMessage };
 }
 
+function getSyntaxHighlighterElements(syntaxhighlighterClassName: string) {
+    return <HTMLCollectionOf<HTMLElement>>window.document.getElementsByClassName(syntaxhighlighterClassName);
+}
 
 //#region helpers
-function removeClass(target:HTMLElement, className:string)
-{
+function removeClass(target: HTMLElement, className: string) {
     target.className = target.className.replace(className, '');
 };
-function addClass(target:HTMLElement, className:string)
-{
+function addClass(target: HTMLElement, className: string) {
     target.className = target.className + " " + className;
 };
-function addClassToSVG(target:SVGElement, className:string){
-    var cls=target.getAttribute("class");
-    if(cls){
-        cls+=" " + className;
-    }else{
-        cls=className;
+function addClassToSVG(target: SVGElement, className: string) {
+    var cls = target.getAttribute("class");
+    if (cls) {
+        cls += " " + className;
+    } else {
+        cls = className;
     }
-    target.setAttribute("class",cls);
+    target.setAttribute("class", cls);
 }
 function addClickHandler(el: Element, handler: any) {
     if (el.addEventListener) {
@@ -157,15 +163,33 @@ function addClickHandler(el: Element, handler: any) {
 }
 //#endregion
 
+function setUpToggle(config: ToggleConfig,
+    determineToggleState?: (syntaxHighlighter: HTMLElement, toggleConfig: ToggleConfig) => ToggleState,
+    determineMessages?: (syntaxHighlighter: HTMLElement, toggleConfigMessage: ToggleConfigMessage) => HideShowMessagesWhen,
+    addToggleFunctionality?: (highlighterElement: HTMLElement, hide: boolean, messages: HideShowMessages, when: When, placement: ToggleConfigMessage["placement"], classNames: ClassNames) => void,
+    syntaxHighlighterElementFinder?:(syntaxHighlighterClassName:string) => HTMLCollectionOf<HTMLElement>
+){
 
-function getCaption(highlighterElement:Element){
-    var caption=(highlighterElement.children[0] as HTMLTableElement).caption;
-    if(caption){
-        const text= caption.textContent;
-        return text!==null?text:"";
+    determineToggleState = determineToggleState ? determineToggleState : getToggleState;
+    determineMessages = determineMessages ? determineMessages : getHideShowMessages;
+    addToggleFunctionality = addToggleFunctionality ? addToggleFunctionality : createToggle;
+    syntaxHighlighterElementFinder = syntaxHighlighterElementFinder ? syntaxHighlighterElementFinder : getSyntaxHighlighterElements;
+
+    const syntaxHighlighters = syntaxHighlighterElementFinder("syntaxhighlighter");
+    for (let i = 0; i < syntaxHighlighters.length; i++) {
+
+        var syntaxHighlighter = syntaxHighlighters[i];
+        const toggleState = determineToggleState(syntaxHighlighter,config);
+        if (toggleState !== ToggleState.Never) {
+            const messages = determineMessages(syntaxHighlighter, config.message);
+            const show = toggleState === ToggleState.Show;
+            addToggleFunctionality(syntaxHighlighter, !show,
+                {hiddenMessage:messages.hiddenMessage,showMessage:messages.showMessage},
+                messages.when, config.message.placement, config.classNames);
+        }
     }
-    return "";
 }
+
 
 
 
