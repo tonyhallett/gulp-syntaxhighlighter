@@ -10,14 +10,14 @@ export class JsDomDocument implements IJsDomDocument {
         this.document = this.dom.window.document;
     }
 
-    addRemovableScriptElement(contents: string) {
+    addSyntaxHighlighterScript(contents: string) {
         const scriptEl = this.document.createElement("script");
         scriptEl.textContent = contents;
         scriptEl.className = this.removableScriptClassName;
         this.document.body.appendChild(scriptEl);
     }
 
-    addScriptElement(contents: string) {
+    addToggleScript(contents: string) {
         const scriptEl = this.document.createElement("script");
         scriptEl.textContent = contents;
         this.document.body.appendChild(scriptEl);

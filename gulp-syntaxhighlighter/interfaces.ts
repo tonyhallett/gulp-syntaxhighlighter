@@ -10,8 +10,8 @@ export interface IJsDomDocumentFactory {
 }
 
 export interface IJsDomDocument {
-    addRemovableScriptElement(contents: string): void;
-    addScriptElement(contents: string): void;
+    addSyntaxHighlighterScript(contents: string): void;
+    addToggleScript(contents: string): void;
     addCss(css: string): void;
     getNewContents(isPartial: boolean): string;
 }

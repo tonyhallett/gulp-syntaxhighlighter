@@ -5,7 +5,7 @@ export class SyntaxHighlighterDocumentManager implements ISyntaxHighlighterDocum
 
     public addSyntaxHighlighterScripts(useMinifiedSyntaxHighlighter: boolean) {
         const scripts = this.assetLoader.getScripts(useMinifiedSyntaxHighlighter);
-        scripts.forEach(s => this.jsDomDocument.addRemovableScriptElement(s));
+        scripts.forEach(s => this.jsDomDocument.addSyntaxHighlighterScript(s));
     }
 
     public addCustomTheme(customTheme: string) {
@@ -53,7 +53,7 @@ export class SyntaxHighlighterDocumentManager implements ISyntaxHighlighterDocum
        
         SyntaxHighlighter.highlight(${JSON.stringify(globalParams)});
         `
-        this.jsDomDocument.addRemovableScriptElement(highlightScript);
+        this.jsDomDocument.addSyntaxHighlighterScript(highlightScript);
 
     }
 }

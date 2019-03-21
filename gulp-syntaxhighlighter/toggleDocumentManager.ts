@@ -51,7 +51,7 @@ export class ToggleDocumentManager implements IToggleDocumentManager {
 
     //#region toggle js
     private addToggleJs() {
-        this.jsDomDocument.addScriptElement(this.getToggleScript());
+        this.jsDomDocument.addToggleScript(this.getToggleScript());
     }
     private wrapInIEF(createToggleFn:string,toggleScript:string,setupToggle:string){
         let ief = `
