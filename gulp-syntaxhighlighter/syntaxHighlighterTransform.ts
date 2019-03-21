@@ -7,7 +7,7 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
     private globalParams = {};
     private themeName = "Default";
     private useMinifiedSyntaxHighlighter = true;
-    private minifiedOutput = true;
+    
     private isPartial = function (html: string, file: File) {
         const firstTag = html.substring(html.indexOf("<"), html.indexOf(">")).toLowerCase();
         return !(firstTag.startsWith("<!doctype") || firstTag.startsWith("<html") || firstTag.startsWith("<head") || firstTag.startsWith("<body"));
@@ -27,10 +27,7 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
             }
         );
         //override defaults from options if provided
-        if (options!.minifiedOutput !== undefined) {
-            this.minifiedOutput = options!.minifiedOutput
-        }
-        this.minifier.initialize(this.minifiedOutput);
+        
 
         if (options.useMinifiedSyntaxHighlighter !== undefined) {
             this.useMinifiedSyntaxHighlighter = options.useMinifiedSyntaxHighlighter;
@@ -47,9 +44,16 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
         if (options.useMinifiedSyntaxHighlighter) {
             this.useMinifiedSyntaxHighlighter = options.useMinifiedSyntaxHighlighter;
         }
+        this.initializeMinifier();
 
     }
-
+    private initializeMinifier(){
+        var minifiedOutput = true;
+        if (this.options!.minifiedOutput !== undefined) {
+            minifiedOutput = this.options!.minifiedOutput
+        }
+        this.minifier.initialize(minifiedOutput);
+    }
 
     protected transformBufferFile(file: File, contents: Buffer, encoding: string, cb: TransformCallback): void {
         this.file = file;
