@@ -80,25 +80,21 @@ describe('SyntaxHighlighterDocumentManager',()=>{
                 syntaxHighlighterDocumentManager.applySyntaxHighlighter(globalParam,null as any);
                 expect(globalParam.toolbar).toBe(false);
             })
-            //todo - this is convuluted
-            it('should addSyntaxHighlighterScript to the jsDocument and with default config if not provided',()=>{
-                (JSON as any).stringify=function(obj:any){
-                    //if config null this would throw
-                    if(obj["toolbar"]!==undefined){
-                        expect(obj["toolbar"]).toBe(false);
-                        //if this path is not taken then the script strings will not match
-                        return "stringifiedGlobalParams";
-                    }else{
-                        return "stringifiedConfig";
-                    }
+            it('should addSyntaxHighlighterScript to the jsDocument',()=>{
+                interface Stringified{
+                    stringified:string
                 }
-
-            var syntaxHighlighterDocumentManager=new SyntaxHighlighterDocumentManager(
-                mockJsDocument as any,mockMinifier,mockAssetLoader as any);
-            const expectedScript=(syntaxHighlighterDocumentManager as any).getHighlightScript("stringifiedGlobalParams","stringifiedConfig");
-            syntaxHighlighterDocumentManager.applySyntaxHighlighter({},null as any);
-            expect(mockJsDocument.addSyntaxHighlighterScript).toHaveBeenCalledWith(expectedScript);
-});
+                (JSON as any).stringify=function(obj:Stringified){
+                    return obj.stringified;
+                }
+                const globalParams:Stringified={stringified:"stringifiedGlobalParams"};
+                const config:Stringified={stringified:"stringifiedConfig"}
+                var syntaxHighlighterDocumentManager=new SyntaxHighlighterDocumentManager(
+                    mockJsDocument as any,mockMinifier,mockAssetLoader as any);
+                const expectedScript=(syntaxHighlighterDocumentManager as any).getHighlightScript(globalParams.stringified,config.stringified);
+                syntaxHighlighterDocumentManager.applySyntaxHighlighter(globalParams as any,config as any);
+                expect(mockJsDocument.addSyntaxHighlighterScript).toHaveBeenCalledWith(expectedScript);
+}           );
 
 
         })
