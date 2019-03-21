@@ -72,14 +72,6 @@ describe('SyntaxHighlighterDocumentManager',()=>{
             
         });
         describe('applySyntaxHighlighter',()=>{
-            it('should set the toolbar to false for the global param',()=>{
-                const globalParam={
-                } as any;
-                var syntaxHighlighterDocumentManager=new SyntaxHighlighterDocumentManager(
-                    mockJsDocument as any,mockMinifier,mockAssetLoader as any);
-                syntaxHighlighterDocumentManager.applySyntaxHighlighter(globalParam,null as any);
-                expect(globalParam.toolbar).toBe(false);
-            })
             it('should addSyntaxHighlighterScript to the jsDocument',()=>{
                 interface Stringified{
                     stringified:string
@@ -94,9 +86,7 @@ describe('SyntaxHighlighterDocumentManager',()=>{
                 const expectedScript=(syntaxHighlighterDocumentManager as any).getHighlightScript(globalParams.stringified,config.stringified);
                 syntaxHighlighterDocumentManager.applySyntaxHighlighter(globalParams as any,config as any);
                 expect(mockJsDocument.addSyntaxHighlighterScript).toHaveBeenCalledWith(expectedScript);
-}           );
-
-
+            });
         })
     });
     

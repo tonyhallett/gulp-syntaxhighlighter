@@ -1,5 +1,5 @@
 import { SyntaxHighlighterOptions } from './publicInterfaces'
-import { ISyntaxHighlighterDocumentManagerFactory, ISyntaxHighlighterDocumentManager, IJsDomDocument, IMinifier, ISyntaxHighlighterAssetLoader } from './interfaces'
+import { ISyntaxHighlighterDocumentManagerFactory, ISyntaxHighlighterDocumentManager, IJsDomDocument, IMinifier, ISyntaxHighlighterAssetLoader, SyntaxHighlighterGlobalParamsNoToolbar } from './interfaces'
 export class SyntaxHighlighterDocumentManager implements ISyntaxHighlighterDocumentManager {
     constructor(private readonly jsDomDocument: IJsDomDocument, private readonly minifier: IMinifier, private readonly assetLoader: ISyntaxHighlighterAssetLoader) { }
 
@@ -48,17 +48,12 @@ SyntaxHighlighter.config=merge(SyntaxHighlighter.config,${config})
 SyntaxHighlighter.highlight(${globalParams});
 `
     }
-    applySyntaxHighlighter(globalParams: SyntaxHighlighterOptions["globalParams"], config: SyntaxHighlighterOptions["config"]) {
-        config = config ? config : {};
-        (globalParams as any).toolbar = false;
-
-        
+    applySyntaxHighlighter(globalParams: SyntaxHighlighterGlobalParamsNoToolbar, config: SyntaxHighlighterOptions["config"]) {
         this.jsDomDocument.addSyntaxHighlighterScript(
             this.getHighlightScript(
                 JSON.stringify(globalParams),
                 JSON.stringify(config)
             )
         );
-
     }
 }

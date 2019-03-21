@@ -1,5 +1,5 @@
 import {SyntaxHighlighterTransform} from '../gulp-syntaxhighlighter/syntaxHighlighterTransform'
-import { IMinifier, ISyntaxHighlighterAssetLoader, IJsDomDocumentFactory, ISyntaxHighlighterDocumentManagerFactory, IToggleDocumentManagerFactory } from '../gulp-syntaxhighlighter/interfaces';
+import { IMinifier, ISyntaxHighlighterAssetLoader, IJsDomDocumentFactory, ISyntaxHighlighterDocumentManagerFactory, IToggleDocumentManagerFactory, SyntaxHighlighterGlobalParamsNoToolbar } from '../gulp-syntaxhighlighter/interfaces';
 import {createStreamFile,createBufferFile,pluginTest,File} from 'gulpPluginTestHelpers'
 import { SyntaxHighlighterOptions } from '../gulp-syntaxhighlighter/publicInterfaces';
 
@@ -220,33 +220,41 @@ describe('transformBufferFile',()=>{
                 });
             })
         })
-        describe('should apply syntax highlighter with syntax highlighter with global params and config',()=>{
-            const applySyntaxHighlighterTestOptions:Array<ExpectedBoolTest>=[
+        describe('should apply syntax highlighter with config ( which defaults ) and SyntaxHighlighterGlobalParamsNoToolbar ',()=>{
+            interface ApplySyntaxHighlighterTestOption{
+                config?:SyntaxHighlighterOptions["config"],
+                expectedConfig:SyntaxHighlighterOptions["config"],
+                globalParams?:SyntaxHighlighterOptions["globalParams"],
+                expectedGlobalParams:SyntaxHighlighterGlobalParamsNoToolbar,
+                description:string
+            }
+            const applySyntaxHighlighterTestOptions:Array<ApplySyntaxHighlighterTestOption>=[
+                {description:"Defaults",expectedConfig:{},expectedGlobalParams:{toolbar:false}},
                 {
-                    description:"Default",
-                    expected:false
-                },
-                {
-                    description:"Options",
-                    expected:true
+                    description:"From options",
+                    config:{bloggerMode:true},
+                    expectedConfig:{bloggerMode:true},
+                    globalParams:{gutter:true},
+                    expectedGlobalParams:{gutter:true,toolbar:false}
                 }
-            ];
+            ]
+            
             applySyntaxHighlighterTestOptions.forEach(testOption=>{
                 it(testOption.description,done=>{
-                    var syntaxHighlighterOptions:SyntaxHighlighterOptions={
-                        config:{bloggerMode:true}
-                    }
-                    if(testOption.expected){
-                        syntaxHighlighterOptions.globalParams={gutter:true};
-                    }
-                    pluginTestEnsureNoError(done,getTransform(syntaxHighlighterOptions),getMockBufferFile() as any,(_)=>{
-                        const applySyntaxHighlighterExpect=expect(mockSyntaxHighlighterDocumentManager.applySyntaxHighlighter);
-                        if(testOption.expected){
-                            applySyntaxHighlighterExpect.toHaveBeenCalledWith(syntaxHighlighterOptions.globalParams,syntaxHighlighterOptions.config);
-                        }else{
-                            applySyntaxHighlighterExpect.toHaveBeenCalledWith({},syntaxHighlighterOptions.config);
-                        }
-                    })
+                    
+                    pluginTestEnsureNoError(done,
+                        getTransform({
+                            globalParams:testOption.globalParams,
+                            config:testOption.config
+                        }),
+                        getMockBufferFile() as any,
+                        (_)=>{
+                            const args=mockSyntaxHighlighterDocumentManager.applySyntaxHighlighter.mock.calls[0] as any[];
+                            const globalParamsArg=args[0];
+                            const configArg=args[1];
+                            expect(globalParamsArg).toEqual(testOption.expectedGlobalParams);
+                            expect(configArg).toEqual(testOption.expectedConfig);
+                        })
                 })
             });
             

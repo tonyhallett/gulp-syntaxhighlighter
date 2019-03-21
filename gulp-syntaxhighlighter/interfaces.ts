@@ -26,13 +26,13 @@ export interface IMinifier {
 export interface ISyntaxHighlighterDocumentManagerFactory {
     create(jsDomDocument: IJsDomDocument, minifier: IMinifier, assetLoader: ISyntaxHighlighterAssetLoader): ISyntaxHighlighterDocumentManager;
 }
-
+export type SyntaxHighlighterGlobalParamsNoToolbar=SyntaxHighlighterOptions["globalParams"]&{toolbar:false};
 export interface ISyntaxHighlighterDocumentManager {
     addSyntaxHighlighterScripts(useMinifiedSyntaxHighlighter: boolean): void;
     addCustomTheme(customTheme: string): void;
     addAdditionalCss(additionalCss: string): void;
     addNamedTheme(themeName: string): void;
-    applySyntaxHighlighter(globalParams: SyntaxHighlighterOptions["globalParams"], config: SyntaxHighlighterOptions["config"] ): void;
+    applySyntaxHighlighter(globalParams: SyntaxHighlighterGlobalParamsNoToolbar, config: SyntaxHighlighterOptions["config"] ): void;
 }
 
 export interface IToggleDocumentManagerFactory {

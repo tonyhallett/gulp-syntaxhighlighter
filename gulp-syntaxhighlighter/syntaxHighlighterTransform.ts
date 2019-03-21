@@ -2,10 +2,13 @@ import { GulpTransformBase, File, GulpTransformBaseOptions, TransformCallback } 
 import { IJsDomDocument, IMinifier, IJsDomDocumentFactory, ISyntaxHighlighterDocumentManagerFactory, ISyntaxHighlighterAssetLoader,IToggleDocumentManagerFactory } from './interfaces'
 import { SyntaxHighlighterOptions, SyntaxHighlighterTransformOptions} from './publicInterfaces'
 import { domainToASCII } from "url";
+
+
 export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighlighterTransformOptions> {
 
     //region defaults
-    private globalParams = {};
+    private globalParams:SyntaxHighlighterOptions["globalParams"]={}
+    private config:SyntaxHighlighterOptions["config"] = {}
     private themeName = "Default";
     private useMinifiedSyntaxHighlighter = true;
     
@@ -39,8 +42,12 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
         if (options.globalParams) {
             this.globalParams = options.globalParams;
         }
+        
         if (options.theme) {
             this.themeName = options.theme;
+        }
+        if(options.config){
+            this.config=options.config;
         }
         this.initializeMinifier();
 
@@ -84,7 +91,8 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
         if (this.options!.additionalCss) {
             syntaxHighlighterDocumentManager.addAdditionalCss(this.options!.additionalCss);
         }
-        syntaxHighlighterDocumentManager.applySyntaxHighlighter(this.globalParams, this.options!.config);
+        const toolbarFalse:{toolbar:false}={toolbar:false};
+        syntaxHighlighterDocumentManager.applySyntaxHighlighter(Object.assign({},this.globalParams,toolbarFalse), this.config);
     }
 
     private getNewContents() {
