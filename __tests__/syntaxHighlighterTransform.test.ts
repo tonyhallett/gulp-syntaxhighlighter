@@ -3,27 +3,12 @@ import { IMinifier, ISyntaxHighlighterAssetLoader, IJsDomDocumentFactory, ISynta
 import {createStreamFile,createBufferFile,pluginTest,File} from 'gulpPluginTestHelpers'
 import { SyntaxHighlighterOptions } from '../gulp-syntaxhighlighter/publicInterfaces';
 
-//{minifiedOutput?:boolean,description:string,expected:boolean}
 interface TExpectedTest<TExpected>{
     description:string,
     expected:TExpected
 }
 type ExpectedBoolTest=TExpectedTest<boolean>
 
-//these need to be exposed on the base class
-xdescribe('base options',()=>{
-    it('should support buffer',()=>{
-
-    });
-    it('should not support stream',()=>{
-
-    })
-    it('should have plugin name gulp-syntaxhighlighter',()=>{
-
-    })
-
-})
-var noop=function(){}
 describe('transformBufferFile',()=>{
     function pluginTestEnsureNoError(done:jest.DoneCallback,
         syntaxHighlighterTransform:SyntaxHighlighterTransform,

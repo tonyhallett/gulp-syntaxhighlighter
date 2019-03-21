@@ -23,15 +23,9 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
     private jsDomDocument!: IJsDomDocument
 
     constructor(options: SyntaxHighlighterOptions, private readonly assetLoader: ISyntaxHighlighterAssetLoader, private readonly minifier: IMinifier, private readonly jsDomDocumentFactory: IJsDomDocumentFactory, private readonly syntaxHighlighterDocumentManagerFactory: ISyntaxHighlighterDocumentManagerFactory, private readonly toggleDocumentManagerFactory: IToggleDocumentManagerFactory) {
-        super(options,
-            {
-                supportsBuffer: true,
-                supportsStream: false,
-                pluginName: "gulp-syntaxhighlighter"
-            }
-        );
+        super(options);
+
         //override defaults from options if provided
-        
 
         if (options.useMinifiedSyntaxHighlighter !== undefined) {
             this.useMinifiedSyntaxHighlighter = options.useMinifiedSyntaxHighlighter;
