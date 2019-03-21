@@ -72,9 +72,16 @@ describe('SyntaxHighlighterDocumentManager',()=>{
             
         });
         describe('applySyntaxHighlighter',()=>{
-            
+            it('should set the toolbar to false for the global param',()=>{
+                const globalParam={
+                } as any;
+                var syntaxHighlighterDocumentManager=new SyntaxHighlighterDocumentManager(
+                    mockJsDocument as any,mockMinifier,mockAssetLoader as any);
+                syntaxHighlighterDocumentManager.applySyntaxHighlighter(globalParam,null as any);
+                expect(globalParam.toolbar).toBe(false);
+            })
             //todo - this is convuluted
-            it('should addSyntaxHighlighterScript to the jsDocument,with turned off toolbars and with default config if not provided',()=>{
+            it('should addSyntaxHighlighterScript to the jsDocument and with default config if not provided',()=>{
                 (JSON as any).stringify=function(obj:any){
                     //if config null this would throw
                     if(obj["toolbar"]!==undefined){
