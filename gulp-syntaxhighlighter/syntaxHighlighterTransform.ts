@@ -1,6 +1,7 @@
 import { GulpTransformBase, File, GulpTransformBaseOptions, TransformCallback } from "gulptransformbase"
 import { IJsDomDocument, IMinifier, IJsDomDocumentFactory, ISyntaxHighlighterDocumentManagerFactory, ISyntaxHighlighterAssetLoader,IToggleDocumentManagerFactory } from './interfaces'
 import { SyntaxHighlighterOptions, SyntaxHighlighterTransformOptions} from './publicInterfaces'
+import { domainToASCII } from "url";
 export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighlighterTransformOptions> {
 
     //region defaults
@@ -40,9 +41,6 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
         }
         if (options.theme) {
             this.themeName = options.theme;
-        }
-        if (options.useMinifiedSyntaxHighlighter) {
-            this.useMinifiedSyntaxHighlighter = options.useMinifiedSyntaxHighlighter;
         }
         this.initializeMinifier();
 
