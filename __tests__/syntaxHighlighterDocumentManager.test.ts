@@ -83,8 +83,9 @@ describe('SyntaxHighlighterDocumentManager',()=>{
                 const config:Stringified={stringified:"stringifiedConfig"}
                 var syntaxHighlighterDocumentManager=new SyntaxHighlighterDocumentManager(
                     mockJsDocument as any,mockMinifier,mockAssetLoader as any);
-                const expectedScript=(syntaxHighlighterDocumentManager as any).getHighlightScript(globalParams.stringified,config.stringified);
+
                 syntaxHighlighterDocumentManager.applySyntaxHighlighter(globalParams as any,config as any);
+                const expectedScript=(syntaxHighlighterDocumentManager as any).getHighlightScript(globalParams.stringified,config.stringified);
                 expect(mockJsDocument.addSyntaxHighlighterScript).toHaveBeenCalledWith(expectedScript);
             });
         })
