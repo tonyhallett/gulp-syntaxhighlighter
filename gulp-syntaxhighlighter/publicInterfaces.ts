@@ -6,7 +6,7 @@ export interface IToggleConfig {
     createToggleFn?: string,
     customCss?: string,
     toggleState?: "Show" | "Hide",
-    message?: IToggleConfigMessages,
+    messages?: IToggleConfigMessages,
     classNames?: IClassNames
 }
 

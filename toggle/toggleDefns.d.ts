@@ -1,7 +1,7 @@
 type When = "Always" | "Hidden" | "Never";
 interface ToggleConfig {
     toggleState?: "Show" | "Hide",
-    message: ToggleConfigMessages,
+    messages: ToggleConfigMessages,
     classNames: ClassNames
 }
 interface ToggleConfigMessages {

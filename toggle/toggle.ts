@@ -83,7 +83,7 @@ function createToggle(highlighterElement: HTMLElement, hide: boolean, messages: 
     addToggle(hide);
 }
 
-function getHideShowMessages(syntaxHighlighter: HTMLElement, toggleConfigMessage: ToggleConfigMessages): HideShowMessagesWhen {
+function getHideShowMessages(syntaxHighlighter: HTMLElement, toggleConfigMessages: ToggleConfigMessages): HideShowMessagesWhen {
     function getHideShowMessages(message: ToggleConfigMessages): HideShowMessages {
         function getCaption() {
             var caption = (syntaxHighlighter.children[0] as HTMLTableElement).caption;
@@ -117,7 +117,7 @@ function getHideShowMessages(syntaxHighlighter: HTMLElement, toggleConfigMessage
 
     //attribute or config
     function getMessages() {
-        const messageConfig = { ...toggleConfigMessage } as any;
+        const messageConfig = { ...toggleConfigMessages } as any;
         var messageNames = Object.getOwnPropertyNames(messageConfig);
         for (var i = 0; i < messageNames.length; i++) {
             var messageName = messageNames[i];
@@ -165,7 +165,7 @@ function addClickHandler(el: Element, handler: any) {
 
 function setUpToggle(config: ToggleConfig,
     determineToggleState?: (syntaxHighlighter: HTMLElement, toggleConfig: ToggleConfig) => ToggleState,
-    determineMessages?: (syntaxHighlighter: HTMLElement, toggleConfigMessage: ToggleConfigMessages) => HideShowMessagesWhen,
+    determineMessages?: (syntaxHighlighter: HTMLElement, toggleConfigMessages: ToggleConfigMessages) => HideShowMessagesWhen,
     addToggleFunctionality?: (highlighterElement: HTMLElement, hide: boolean, messages: HideShowMessages, when: When, placement: ToggleConfigMessages["placement"], classNames: ClassNames) => void,
     syntaxHighlighterElementFinder?:(syntaxHighlighterClassName:string) => HTMLCollectionOf<HTMLElement>
 ){
@@ -181,11 +181,11 @@ function setUpToggle(config: ToggleConfig,
         var syntaxHighlighter = syntaxHighlighters[i];
         const toggleState = determineToggleState(syntaxHighlighter,config);
         if (toggleState !== ToggleState.Never) {
-            const messages = determineMessages(syntaxHighlighter, config.message);
+            const messages = determineMessages(syntaxHighlighter, config.messages);
             const show = toggleState === ToggleState.Show;
             addToggleFunctionality(syntaxHighlighter, !show,
                 {hiddenMessage:messages.hiddenMessage,showMessage:messages.showMessage},
-                messages.when, config.message.placement, config.classNames);
+                messages.when, config.messages.placement, config.classNames);
         }
     }
 }
