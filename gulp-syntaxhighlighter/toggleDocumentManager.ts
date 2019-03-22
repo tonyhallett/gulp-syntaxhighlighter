@@ -6,7 +6,7 @@ import { IToggleConfig, } from './publicInterfaces'
 
 export class ToggleDocumentManager implements IToggleDocumentManager {
     private toggleConfigWithDefaults!: ToggleConfig
-    private toggleConfigMessageDefault: ToggleConfigMessage = {
+    private toggleConfigMessageDefault: ToggleConfigMessages = {
         hideMessage: "",
         showMessage: "",
         message: "",

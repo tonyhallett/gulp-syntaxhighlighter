@@ -32,7 +32,7 @@ function getToggleState(syntaxHighlighter: HTMLElement, toggleConfig: ToggleConf
     return toggleState;
 }
 
-function createToggle(highlighterElement: HTMLElement, hide: boolean, messages: HideShowMessages, when: When, placement: ToggleConfigMessage["placement"], classNames: ClassNames) {
+function createToggle(highlighterElement: HTMLElement, hide: boolean, messages: HideShowMessages, when: When, placement: ToggleConfigMessages["placement"], classNames: ClassNames) {
     let isHidden = false
     function svgClick() {
         (highlighterElement.parentNode as Node).removeChild(currentEl)
@@ -83,8 +83,8 @@ function createToggle(highlighterElement: HTMLElement, hide: boolean, messages: 
     addToggle(hide);
 }
 
-function getHideShowMessages(syntaxHighlighter: HTMLElement, toggleConfigMessage: ToggleConfigMessage): HideShowMessagesWhen {
-    function getHideShowMessages(message: ToggleConfigMessage): HideShowMessages {
+function getHideShowMessages(syntaxHighlighter: HTMLElement, toggleConfigMessage: ToggleConfigMessages): HideShowMessagesWhen {
+    function getHideShowMessages(message: ToggleConfigMessages): HideShowMessages {
         function getCaption() {
             var caption = (syntaxHighlighter.children[0] as HTMLTableElement).caption;
             if (caption) {
@@ -126,7 +126,7 @@ function getHideShowMessages(syntaxHighlighter: HTMLElement, toggleConfigMessage
                 messageConfig[messageName] = dataValue;
             }
         }
-        return messageConfig as ToggleConfigMessage;
+        return messageConfig as ToggleConfigMessages;
     }
 
     var messages = getMessages()
@@ -165,8 +165,8 @@ function addClickHandler(el: Element, handler: any) {
 
 function setUpToggle(config: ToggleConfig,
     determineToggleState?: (syntaxHighlighter: HTMLElement, toggleConfig: ToggleConfig) => ToggleState,
-    determineMessages?: (syntaxHighlighter: HTMLElement, toggleConfigMessage: ToggleConfigMessage) => HideShowMessagesWhen,
-    addToggleFunctionality?: (highlighterElement: HTMLElement, hide: boolean, messages: HideShowMessages, when: When, placement: ToggleConfigMessage["placement"], classNames: ClassNames) => void,
+    determineMessages?: (syntaxHighlighter: HTMLElement, toggleConfigMessage: ToggleConfigMessages) => HideShowMessagesWhen,
+    addToggleFunctionality?: (highlighterElement: HTMLElement, hide: boolean, messages: HideShowMessages, when: When, placement: ToggleConfigMessages["placement"], classNames: ClassNames) => void,
     syntaxHighlighterElementFinder?:(syntaxHighlighterClassName:string) => HTMLCollectionOf<HTMLElement>
 ){
 
