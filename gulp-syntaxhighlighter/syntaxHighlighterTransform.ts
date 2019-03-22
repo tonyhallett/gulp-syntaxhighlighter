@@ -1,10 +1,10 @@
-import { GulpTransformBase, File, GulpTransformBaseOptions, TransformCallback } from "gulptransformbase"
+import { GulpTransformBase, File, TransformCallback } from "gulptransformbase"
 import { IJsDomDocument, IMinifier, IJsDomDocumentFactory, ISyntaxHighlighterDocumentManagerFactory, ISyntaxHighlighterAssetLoader,IToggleDocumentManagerFactory } from './interfaces'
-import { GulpSyntaxHighlighterOptions, SyntaxHighlighterTransformOptions} from './publicInterfaces'
-import { domainToASCII } from "url";
+import { GulpSyntaxHighlighterOptions} from './publicInterfaces'
 
 
-export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighlighterTransformOptions> {
+
+export class SyntaxHighlighterTransform extends GulpTransformBase<GulpSyntaxHighlighterOptions> {
 
     //region defaults
     private globalParams:GulpSyntaxHighlighterOptions["globalParams"]={}

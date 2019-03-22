@@ -118,4 +118,4 @@ export interface GulpSyntaxHighlighterOptions {
     toggleConfig?: IToggleConfig
 }
 
-export interface SyntaxHighlighterTransformOptions extends GulpTransformBaseOptions, GulpSyntaxHighlighterOptions { }
+//export interface SyntaxHighlighterTransformOptions extends GulpTransformBaseOptions, GulpSyntaxHighlighterOptions { }
