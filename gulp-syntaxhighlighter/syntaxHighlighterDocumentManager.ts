@@ -1,4 +1,4 @@
-import { SyntaxHighlighterOptions } from './publicInterfaces'
+import { GulpSyntaxHighlighterOptions } from './publicInterfaces'
 import { ISyntaxHighlighterDocumentManagerFactory, ISyntaxHighlighterDocumentManager, IJsDomDocument, IMinifier, ISyntaxHighlighterAssetLoader, SyntaxHighlighterGlobalParamsNoToolbar } from './interfaces'
 export class SyntaxHighlighterDocumentManager implements ISyntaxHighlighterDocumentManager {
     constructor(private readonly jsDomDocument: IJsDomDocument, private readonly minifier: IMinifier, private readonly assetLoader: ISyntaxHighlighterAssetLoader) { }
@@ -48,7 +48,7 @@ SyntaxHighlighter.config=merge(SyntaxHighlighter.config,${config})
 SyntaxHighlighter.highlight(${globalParams});
 `
     }
-    applySyntaxHighlighter(globalParams: SyntaxHighlighterGlobalParamsNoToolbar, config: SyntaxHighlighterOptions["config"]) {
+    applySyntaxHighlighter(globalParams: SyntaxHighlighterGlobalParamsNoToolbar, config: GulpSyntaxHighlighterOptions["config"]) {
         this.jsDomDocument.addSyntaxHighlighterScript(
             this.getHighlightScript(
                 JSON.stringify(globalParams),

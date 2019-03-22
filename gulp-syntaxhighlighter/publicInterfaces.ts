@@ -10,7 +10,7 @@ export interface IToggleConfig {
     classNames?: IClassNames
 }
 
-export interface SyntaxHighlighterOptions {
+export interface GulpSyntaxHighlighterOptions {
     isPartialFn?: (html: string, file: File) => boolean
     useMinifiedSyntaxHighlighter?: boolean
     minifiedOutput?: boolean
@@ -118,4 +118,4 @@ export interface SyntaxHighlighterOptions {
     toggleConfig?: IToggleConfig
 }
 
-export interface SyntaxHighlighterTransformOptions extends GulpTransformBaseOptions, SyntaxHighlighterOptions { }
+export interface SyntaxHighlighterTransformOptions extends GulpTransformBaseOptions, GulpSyntaxHighlighterOptions { }

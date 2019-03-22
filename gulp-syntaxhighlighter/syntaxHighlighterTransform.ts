@@ -1,14 +1,14 @@
 import { GulpTransformBase, File, GulpTransformBaseOptions, TransformCallback } from "gulptransformbase"
 import { IJsDomDocument, IMinifier, IJsDomDocumentFactory, ISyntaxHighlighterDocumentManagerFactory, ISyntaxHighlighterAssetLoader,IToggleDocumentManagerFactory } from './interfaces'
-import { SyntaxHighlighterOptions, SyntaxHighlighterTransformOptions} from './publicInterfaces'
+import { GulpSyntaxHighlighterOptions, SyntaxHighlighterTransformOptions} from './publicInterfaces'
 import { domainToASCII } from "url";
 
 
 export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighlighterTransformOptions> {
 
     //region defaults
-    private globalParams:SyntaxHighlighterOptions["globalParams"]={}
-    private config:SyntaxHighlighterOptions["config"] = {}
+    private globalParams:GulpSyntaxHighlighterOptions["globalParams"]={}
+    private config:GulpSyntaxHighlighterOptions["config"] = {}
     private themeName = "Default";
     private useMinifiedSyntaxHighlighter = true;
     
@@ -22,7 +22,7 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
     private file!: File;
     private jsDomDocument!: IJsDomDocument
 
-    constructor(options: SyntaxHighlighterOptions, private readonly assetLoader: ISyntaxHighlighterAssetLoader, private readonly minifier: IMinifier, private readonly jsDomDocumentFactory: IJsDomDocumentFactory, private readonly syntaxHighlighterDocumentManagerFactory: ISyntaxHighlighterDocumentManagerFactory, private readonly toggleDocumentManagerFactory: IToggleDocumentManagerFactory) {
+    constructor(options: GulpSyntaxHighlighterOptions, private readonly assetLoader: ISyntaxHighlighterAssetLoader, private readonly minifier: IMinifier, private readonly jsDomDocumentFactory: IJsDomDocumentFactory, private readonly syntaxHighlighterDocumentManagerFactory: ISyntaxHighlighterDocumentManagerFactory, private readonly toggleDocumentManagerFactory: IToggleDocumentManagerFactory) {
         super(options);
 
         //override defaults from options if provided

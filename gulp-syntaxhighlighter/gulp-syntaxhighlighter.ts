@@ -4,9 +4,9 @@ import { Minifier } from "./minifier"
 import { JsDomDocumentFactory } from './jsDomDocumentFactory'
 import { SyntaxHighlighterDocumentManagerFactory } from './syntaxHighlighterDocumentManagerFactory'
 import { ToggleDocumentManagerFactory } from './toggleDocumentManagerFactory'
-import { SyntaxHighlighterOptions } from './publicInterfaces'
+import { GulpSyntaxHighlighterOptions } from './publicInterfaces'
 
-export function syntaxHighlighter(options?: SyntaxHighlighterOptions) {
+export function syntaxHighlighter(options?: GulpSyntaxHighlighterOptions) {
     options=options?options:{};
     return new SyntaxHighlighterTransform(
         options,

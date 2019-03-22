@@ -1,4 +1,4 @@
-import { IToggleConfig, SyntaxHighlighterOptions } from "./publicInterfaces";
+import { IToggleConfig, GulpSyntaxHighlighterOptions } from "./publicInterfaces";
 
 export interface ISyntaxHighlighterAssetLoader {
     getScripts(minified: boolean): string[];
@@ -26,13 +26,13 @@ export interface IMinifier {
 export interface ISyntaxHighlighterDocumentManagerFactory {
     create(jsDomDocument: IJsDomDocument, minifier: IMinifier, assetLoader: ISyntaxHighlighterAssetLoader): ISyntaxHighlighterDocumentManager;
 }
-export type SyntaxHighlighterGlobalParamsNoToolbar=SyntaxHighlighterOptions["globalParams"]&{toolbar:false};
+export type SyntaxHighlighterGlobalParamsNoToolbar=GulpSyntaxHighlighterOptions["globalParams"]&{toolbar:false};
 export interface ISyntaxHighlighterDocumentManager {
     addSyntaxHighlighterScripts(useMinifiedSyntaxHighlighter: boolean): void;
     addCustomTheme(customTheme: string): void;
     addAdditionalCss(additionalCss: string): void;
     addNamedTheme(themeName: string): void;
-    applySyntaxHighlighter(globalParams: SyntaxHighlighterGlobalParamsNoToolbar, config: SyntaxHighlighterOptions["config"] ): void;
+    applySyntaxHighlighter(globalParams: SyntaxHighlighterGlobalParamsNoToolbar, config: GulpSyntaxHighlighterOptions["config"] ): void;
 }
 
 export interface IToggleDocumentManagerFactory {
