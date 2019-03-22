@@ -3,7 +3,7 @@ import * as path from 'path'
 
 export function getFilteredFilesFromDirectoryDeep(startPath: string, filter: (path: string) => boolean, paths: string[] = []) {
     if (!fs.existsSync(startPath)) {
-        console.log("no dir ", startPath);
+        console.log("no dir: " + startPath);
         return paths;
     }
 
