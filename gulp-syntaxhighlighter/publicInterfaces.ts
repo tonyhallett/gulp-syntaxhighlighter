@@ -1,11 +1,12 @@
 ///<reference path="../toggle/toggleDefns.d.ts"/>
 import { GulpTransformBaseOptions,File } from 'gulptransformbase'
-export type IToggleConfigMessage = Partial<ToggleConfigMessage>
-export type IClassNames = Partial<ClassNames>
 
-export type IToggleConfig = Partial<ToggleConfig> & {
+export interface IToggleConfig {
     createToggleFn?: string,
-    customCss?: string
+    customCss?: string,
+    toggleState?: "Show" | "Hide",
+    message?: Partial<ToggleConfigMessage>,
+    classNames?: Partial<ClassNames>
 }
 
 export interface SyntaxHighlighterOptions {

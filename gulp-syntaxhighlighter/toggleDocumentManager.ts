@@ -2,11 +2,11 @@
 import * as path from 'path'
 import * as fs from 'fs'
 import { IToggleDocumentManager, IJsDomDocument, IMinifier } from './interfaces'
-import { IToggleConfig, IToggleConfigMessage, IClassNames } from './publicInterfaces'
+import { IToggleConfig, } from './publicInterfaces'
 
 export class ToggleDocumentManager implements IToggleDocumentManager {
     private toggleConfigWithDefaults!: ToggleConfig
-    private toggleConfigMessageDefault: IToggleConfigMessage = {
+    private toggleConfigMessageDefault: ToggleConfigMessage = {
         hideMessage: "",
         showMessage: "",
         message: "",
@@ -17,7 +17,7 @@ export class ToggleDocumentManager implements IToggleDocumentManager {
         when: "Never",
         placement: "Right"
     }
-    private classNamesDefault: IClassNames = {
+    private classNamesDefault: ClassNames = {
         toggleContainer: "toggleContainer",
         toggleText: "toggleText",
         toggle: "toggle",
@@ -116,7 +116,7 @@ export class ToggleDocumentManager implements IToggleDocumentManager {
     //#endregion
 
     //#region toggleCSS
-    private getDefaultToggleCss(classNames: IClassNames): string {
+    private getDefaultToggleCss(classNames: ToggleConfig["classNames"]): string {
         const svgSize = "1em";
         return `.${classNames.toggle}{ stroke:#000;top:0.125em;position:relative;height:${svgSize};width:${svgSize} }
         .${classNames.toggleText}{ font-size:${svgSize}}
