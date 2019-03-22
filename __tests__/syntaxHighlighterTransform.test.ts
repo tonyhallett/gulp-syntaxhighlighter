@@ -110,12 +110,13 @@ describe('transformBufferFile',()=>{
             it('should create toggle document manager from the factory with dependencies',(done)=>{
                 const toggleConfig={};
                 pluginTestEnsureNoError(done,getTransform({toggleConfig:toggleConfig}),getMockBufferFile() as any,(_)=>{
-                    expect(mockToggleDocumentManagerFactory.create).toHaveBeenCalledWith(mockJsDomDocument,mockMinifier,toggleConfig);
+                    expect(mockToggleDocumentManagerFactory.create).toHaveBeenCalledWith(mockJsDomDocument,mockMinifier);
                 })
             });
             it('should add toggle',(done)=>{
-                pluginTestEnsureNoError(done,getTransform({toggleConfig:{}}),getMockBufferFile() as any,(_)=>{
-                    expect(mockToggleDocumentManager.addToggle).toHaveBeenCalled();
+                const toggleConfig={someConfig:"SomeConfig"} as any;
+                pluginTestEnsureNoError(done,getTransform({toggleConfig:toggleConfig}),getMockBufferFile() as any,(_)=>{
+                    expect(mockToggleDocumentManager.addToggle).toHaveBeenCalledWith(toggleConfig);
                 })
             });
         })

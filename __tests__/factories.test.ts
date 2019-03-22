@@ -34,10 +34,9 @@ describe('toggleDocumentManagerFactory',()=>{
         const factory=new ToggleDocumentManagerFactory();
         var mockDoc={} as any;
         var mockMinifier={} as any;
-        var mockToggleConfig={} as any;
-        var toggle=factory.create(mockDoc,mockMinifier,mockToggleConfig);
+        var toggle=factory.create(mockDoc,mockMinifier);
         expect(toggle).toBeTruthy();
-        expect(ToggleDocumentManager as any as jest.Mock).toBeCalledWith(mockDoc,mockMinifier,mockToggleConfig);
+        expect(ToggleDocumentManager as any as jest.Mock).toBeCalledWith(mockDoc,mockMinifier);
     })
 })
 

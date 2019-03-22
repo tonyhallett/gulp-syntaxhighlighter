@@ -69,8 +69,8 @@ export class SyntaxHighlighterTransform extends GulpTransformBase<SyntaxHighligh
 
     private setUpToggle() {
         if (this.options!.toggleConfig) {
-            var toggleDocumentManager = this.toggleDocumentManagerFactory.create(this.jsDomDocument, this.minifier, this.options!.toggleConfig);
-            toggleDocumentManager.addToggle();
+            var toggleDocumentManager = this.toggleDocumentManagerFactory.create(this.jsDomDocument, this.minifier);
+            toggleDocumentManager.addToggle(this.options!.toggleConfig);
         }
     }
 

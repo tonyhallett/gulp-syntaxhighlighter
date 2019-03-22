@@ -3,8 +3,8 @@ import { IToggleConfig} from './publicInterfaces'
 import {ToggleDocumentManager} from './toggleDocumentManager'
 
 export class ToggleDocumentManagerFactory implements IToggleDocumentManagerFactory {
-    create(jsDomDocument: IJsDomDocument, minifier: IMinifier, toggleConfig: IToggleConfig): IToggleDocumentManager {
-        return new ToggleDocumentManager(jsDomDocument, minifier, toggleConfig);
+    create(jsDomDocument: IJsDomDocument, minifier: IMinifier): IToggleDocumentManager {
+        return new ToggleDocumentManager(jsDomDocument, minifier);
     }
 }
 

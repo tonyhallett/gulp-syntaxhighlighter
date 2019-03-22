@@ -36,9 +36,9 @@ export interface ISyntaxHighlighterDocumentManager {
 }
 
 export interface IToggleDocumentManagerFactory {
-    create(jsDomDocument: IJsDomDocument, minifier: IMinifier, toggleConfig: IToggleConfig): IToggleDocumentManager;
+    create(jsDomDocument: IJsDomDocument, minifier: IMinifier): IToggleDocumentManager;
 }
 
 export interface IToggleDocumentManager {
-    addToggle(): void;
+    addToggle(toggleConfig: IToggleConfig): void;
 }

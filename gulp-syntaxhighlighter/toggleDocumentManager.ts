@@ -26,25 +26,29 @@ export class ToggleDocumentManager implements IToggleDocumentManager {
         isShowing: "isShowing"
     }
     private createToggleFn!: string;
-    constructor(private readonly jsDomDocument: IJsDomDocument, private readonly minifier: IMinifier,private readonly toggleConfig: IToggleConfig) { }
+    private css!:string;
+    constructor(private readonly jsDomDocument: IJsDomDocument, private readonly minifier: IMinifier) { }
         
 
-    public addToggle() {
-        this.addToggleDefaults();
+    public addToggle(toggleConfig: IToggleConfig) {
+        this.addToggleDefaults(toggleConfig);
         this.addToggleJs();
         this.addToggleCss();
     }
 
-    private addToggleDefaults() {
+    private addToggleDefaults(toggleConfig: IToggleConfig) {
 
-        this.createToggleFn = this.toggleConfig.createToggleFn ? this.toggleConfig.createToggleFn : this.defaultCreateToggleFn()
+        var toggleConfigMessage = Object.assign({}, this.toggleConfigMessageDefault, toggleConfig.message);
+        var classNames = Object.assign({}, this.classNamesDefault, toggleConfig.classNames);
 
-        var toggleConfigMessage = Object.assign({}, this.toggleConfigMessageDefault, this.toggleConfig.message);
-        var classNames = Object.assign({}, this.classNamesDefault, this.toggleConfig.classNames);
+        this.css = toggleConfig.customCss ? toggleConfig.customCss : this.getDefaultToggleCss(classNames);
+        this.createToggleFn = toggleConfig.createToggleFn ? toggleConfig.createToggleFn : this.defaultCreateToggleFn()
+
+
         this.toggleConfigWithDefaults = {
             classNames: classNames,
             message: toggleConfigMessage,
-            toggleState: this.toggleConfig.toggleState
+            toggleState: toggleConfig.toggleState
         };
         
     }
@@ -119,8 +123,7 @@ export class ToggleDocumentManager implements IToggleDocumentManager {
         `
     }
     private addToggleCss() {
-        let css: string = this.toggleConfig.customCss ? this.toggleConfig.customCss : this.getDefaultToggleCss(this.toggleConfig.classNames!);
-        this.jsDomDocument.addCss(this.minifier.minifyCss(css));
+        this.jsDomDocument.addCss(this.minifier.minifyCss(this.css));
     }
     //#endregion
 
