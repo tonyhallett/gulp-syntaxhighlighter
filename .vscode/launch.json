@@ -15,6 +15,21 @@
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen",
             "program": "${workspaceFolder}/node_modules/jest/bin/jest"
+        },
+        {
+            "type": "node",
+            "name": "vscode-jest-tests specific",
+            "request": "launch",
+            "args": [
+                "--runInBand",
+                "--testNamePattern",
+                "should add minified js to the jsDomDocument"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "program": "${workspaceFolder}/node_modules/jest/bin/jest"
         }
     ]
+    //should add minified js to the jsDomDocument
 }
