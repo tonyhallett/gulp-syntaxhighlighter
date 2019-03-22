@@ -11,16 +11,19 @@ export class JsDomDocument implements IJsDomDocument {
     }
 
     addSyntaxHighlighterScript(contents: string) {
+        this.addScript(contents,(se)=>{
+            se.className = this.removableScriptClassName;
+        })
+    }
+    addScript(contents:string,callback:(scriptEl:HTMLScriptElement)=>void=function(){}){
         const scriptEl = this.document.createElement("script");
         scriptEl.textContent = contents;
-        scriptEl.className = this.removableScriptClassName;
+        callback(scriptEl);
         this.document.body.appendChild(scriptEl);
     }
 
     addToggleScript(contents: string) {
-        const scriptEl = this.document.createElement("script");
-        scriptEl.textContent = contents;
-        this.document.body.appendChild(scriptEl);
+        this.addScript(contents);
     }
 
     addCss(css: string) {
