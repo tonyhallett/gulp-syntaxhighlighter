@@ -20,7 +20,7 @@ jest.mock('path',()=>{
 })
 jest.mock('../gulp-syntaxhighlighter/fileHelper',()=>{
     return {
-        getFilesWithExtensionFromDir:jest.fn((dir:string,filter:(f:string)=>boolean)=>{
+        getFilteredFilesFromDirectoryDeep:jest.fn((dir:string,filter:(f:string)=>boolean)=>{
             if(dir==="syntaxHighlighterDir"){
                 const brushes = [
                     "notABrush.min.js",

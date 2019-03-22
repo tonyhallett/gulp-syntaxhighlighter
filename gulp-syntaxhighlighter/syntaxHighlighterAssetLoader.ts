@@ -1,7 +1,7 @@
 import * as path from 'path'
 import * as fs from 'fs'
 import { ISyntaxHighlighterAssetLoader } from "./interfaces"
-import { getFilesWithExtensionFromDir } from "./fileHelper"
+import { getFilteredFilesFromDirectoryDeep } from "./fileHelper"
 
 export class SyntaxHighlighterAssetLoader implements ISyntaxHighlighterAssetLoader {
     private getShCore(minified: boolean) {
@@ -10,7 +10,7 @@ export class SyntaxHighlighterAssetLoader implements ISyntaxHighlighterAssetLoad
     }
 
     private getBrushFiles(minified: boolean) {
-        return getFilesWithExtensionFromDir(path.resolve(__dirname, "syntaxHighlighter"), (f => {
+        return getFilteredFilesFromDirectoryDeep(path.resolve(__dirname, "syntaxHighlighter"), (f => {
             if(f.startsWith("shBrush")){
                 if(minified){
                     return f.endsWith(".min.js");
