@@ -11,7 +11,14 @@ export class SyntaxHighlighterAssetLoader implements ISyntaxHighlighterAssetLoad
 
     private getBrushFiles(minified: boolean) {
         return getFilesWithExtensionFromDir(path.resolve(__dirname, "syntaxHighlighter"), (f => {
-            return f.indexOf("shBrush") !== -1 && f.endsWith(this.getJsExtension(minified));
+            if(f.startsWith("shBrush")){
+                if(minified){
+                    return f.endsWith(".min.js");
+                }else{
+                    return f.endsWith(".js")&&!f.endsWith(".min.js");
+                }
+            }
+            return false;
         }));
     }
 
