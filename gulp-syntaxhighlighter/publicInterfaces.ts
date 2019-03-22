@@ -117,5 +117,3 @@ export interface GulpSyntaxHighlighterOptions {
     //if not present then no toggle js/css
     toggleConfig?: IToggleConfig
 }
-
-//export interface SyntaxHighlighterTransformOptions extends GulpTransformBaseOptions, GulpSyntaxHighlighterOptions { }

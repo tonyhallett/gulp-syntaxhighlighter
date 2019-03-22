@@ -23,7 +23,7 @@
             "args": [
                 "--runInBand",
                 "--testNamePattern",
-                "should add minified js to the jsDomDocument"
+                "should append script element to body without the removal class identifier"
             ],
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
