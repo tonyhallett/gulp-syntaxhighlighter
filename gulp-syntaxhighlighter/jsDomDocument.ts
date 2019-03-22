@@ -1,7 +1,7 @@
 import { JSDOM } from 'jsdom';
 import { IJsDomDocument } from './interfaces'
 export class JsDomDocument implements IJsDomDocument {
-    private removableScriptClassName = "__removableScript";
+    private syntaxHighlighterScriptClassName = "__syntaxHighlighterScript";
     private dom: JSDOM;
     private document: Document;
 
@@ -12,7 +12,7 @@ export class JsDomDocument implements IJsDomDocument {
 
     addSyntaxHighlighterScript(contents: string) {
         this.addScript(contents,(se)=>{
-            se.className = this.removableScriptClassName;
+            se.className = this.syntaxHighlighterScriptClassName;
         })
     }
     addScript(contents:string,callback:(scriptEl:HTMLScriptElement)=>void=function(){}){
@@ -34,9 +34,9 @@ export class JsDomDocument implements IJsDomDocument {
 
     getNewContents(isPartial: boolean) {
         if (isPartial) {
-            return this.document.head.innerHTML + this.getBodyWithoutInjectedScripts(false);
+            return this.document.head.innerHTML + this.getBodyWithoutSyntaxHighlighterScripts();
         } else {
-            return this.getDocTypeString() + this.getHtmlWithoutInjectedScripts();
+            return this.getDocTypeString() + this.getHtmlWithoutSyntaxHighlighterScripts();
         }
     }
 
@@ -54,19 +54,18 @@ export class JsDomDocument implements IJsDomDocument {
         return html;
     }
 
-    private getHtmlWithoutInjectedScripts() {
+    private getHtmlWithoutSyntaxHighlighterScripts() {
         const htmlEl = this.document.documentElement;
         let html = htmlEl.outerHTML;
-        const removableScripts = this.document.getElementsByClassName(this.removableScriptClassName);
-        for (let i = 0; i < removableScripts.length; i++) {
-            html = html.replace(removableScripts[i].outerHTML, "");
-        }
-        return html;
+        return this.removeScripts(html);
     }
-    private getBodyWithoutInjectedScripts(outerHTML: boolean) {
+    private getBodyWithoutSyntaxHighlighterScripts() {
         const body = this.document.body;
-        let html = outerHTML ? body.outerHTML : body.innerHTML;
-        const removableScripts = this.document.getElementsByClassName(this.removableScriptClassName);
+        let html = body.outerHTML;
+        return this.removeScripts(html);
+    }
+    private removeScripts(html:string):string{
+        const removableScripts = this.document.getElementsByClassName(this.syntaxHighlighterScriptClassName);
         for (let i = 0; i < removableScripts.length; i++) {
             html = html.replace(removableScripts[i].outerHTML, "");
         }
