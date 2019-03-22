@@ -6,7 +6,7 @@ import { IToggleConfig, } from './publicInterfaces'
 
 export class ToggleDocumentManager implements IToggleDocumentManager {
     private toggleConfigWithDefaults!: ToggleConfig
-    private toggleConfigMessageDefault: ToggleConfigMessages = {
+    private defaultToggleConfigMessages: ToggleConfigMessages = {
         hideMessage: "",
         showMessage: "",
         message: "",
@@ -38,7 +38,7 @@ export class ToggleDocumentManager implements IToggleDocumentManager {
 
     private addToggleDefaults(toggleConfig: IToggleConfig) {
 
-        var toggleConfigMessage = Object.assign({}, this.toggleConfigMessageDefault, toggleConfig.message);
+        var toggleConfigMessage = Object.assign({}, this.defaultToggleConfigMessages, toggleConfig.message);
         var classNames = Object.assign({}, this.classNamesDefault, toggleConfig.classNames);
 
         this.css = toggleConfig.customCss ? toggleConfig.customCss : this.getDefaultToggleCss(classNames);
