@@ -58,6 +58,7 @@
       "json",
       "node"
     ],
+    "testEnvironment":"node",
     "collectCoverage": true
   }
 }
