@@ -1,9 +1,13 @@
 import {ToggleDocumentManager} from '../gulp-syntaxhighlighter/toggleDocumentManager'
 import { IToggleConfig, IClassNames } from '../gulp-syntaxhighlighter/publicInterfaces';
+import {expectedContainingDirectory} from '../__tests_helpers/dirnameHelper';
 
 jest.mock('path',()=>{
     return {
-        join:jest.fn((dir:string,togglejs:string)=>togglejs)
+        join:jest.fn((dir:string,togglejs:string)=>{
+            expect(dir).toBe(expectedContainingDirectory);
+            return togglejs;
+        })
     }
 })
 jest.mock('fs',()=>{

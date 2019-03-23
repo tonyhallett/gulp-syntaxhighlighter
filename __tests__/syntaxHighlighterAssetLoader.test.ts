@@ -1,8 +1,10 @@
 import {SyntaxHighlighterAssetLoader} from '../gulp-syntaxhighlighter/syntaxHighlighterAssetLoader'
-
+import {expectedContainingDirectory} from '../__tests_helpers/dirnameHelper'
 jest.mock('path',()=>{
     return {
         resolve:jest.fn((dir:string,segment:string)=>{
+            expect(dir).toEqual(expectedContainingDirectory);
+
             if(segment==="./syntaxHighlighter/shCore"){
                 return "themePrefix"
             }
