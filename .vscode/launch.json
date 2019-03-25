@@ -9,7 +9,8 @@
             "name": "vscode-jest-tests",
             "request": "launch",
             "args": [
-                "--runInBand"
+                "--runInBand",
+                "--coverage", "false"
             ],
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
@@ -18,18 +19,58 @@
         },
         {
             "type": "node",
-            "name": "vscode-jest-tests specific",
+            "name": "vscode-jest-tests selected text",
             "request": "launch",
             "args": [
                 "--runInBand",
                 "--testNamePattern",
-                "should append script element to body without the removal class identifier"
+                "${selectedText}",
+                "--coverage", "false",
+                
             ],
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen",
             "program": "${workspaceFolder}/node_modules/jest/bin/jest"
+        },
+        {
+            "type": "node",
+            "name": "vscode-jest-tests prompt pattern",
+            "request": "launch",
+            "args": [
+                "--runInBand",
+                "--testNamePattern",
+                "${input:jestSpecificTest}",
+                "--coverage", "false",
+                
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "program": "${workspaceFolder}/node_modules/jest/bin/jest"
+        },
+    ,
+    //${file} does not work for below
+    {
+        "type": "node",
+        "name": "vscode-jest-tests current file",
+        "request": "launch",
+        "args": [
+            "--runInBand",
+            "--coverage", "false",
+            "--runTestsByPath",
+            "${relativeFile}",
+        ],
+        "cwd": "${workspaceFolder}",
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen",
+        "program": "${workspaceFolder}/node_modules/jest/bin/jest"
+    }],
+    "inputs": [
+        {
+            "id": "jestSpecificTest",
+            "type": "promptString",
+            "description":"testNamePattern"
         }
     ]
-    //should add minified js to the jsDomDocument
 }
