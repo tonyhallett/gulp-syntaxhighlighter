@@ -87,7 +87,7 @@ describe('transformBufferFile',()=>{
         minifierTestOptions.forEach((testOption)=>{
             describe(testOption.description,()=>{
                 it('should initialize the minifier',(done)=>{
-                    let syntaxHighlighterOptions:SyntaxHighlighterOptions={};
+                    let syntaxHighlighterOptions:GulpSyntaxHighlighterOptions={};
                     if(testOption.minifiedOutput!==undefined){
                         syntaxHighlighterOptions={minifiedOutput:testOption.minifiedOutput};
                     }
@@ -143,7 +143,7 @@ describe('transformBufferFile',()=>{
             ];
             syntaxHighlighterDocumentManagerTestOptions.forEach(testOption=>{
                 it('should add syntaxhighlighter scripts',done=>{
-                    let syntaxHighlighterOptions:SyntaxHighlighterOptions={};
+                    let syntaxHighlighterOptions:GulpSyntaxHighlighterOptions={};
                     if(testOption.useMinifiedSyntaxHighlighter!==undefined){
                         syntaxHighlighterOptions={useMinifiedSyntaxHighlighter:testOption.useMinifiedSyntaxHighlighter};
                     }
@@ -156,7 +156,7 @@ describe('transformBufferFile',()=>{
         describe('css themes',()=>{
             describe('custom theme or named theme',()=>{
                 it('should add custom theme if in options and not add named theme',(done)=>{
-                    var syntaxHighlighterOptions:SyntaxHighlighterOptions={
+                    var syntaxHighlighterOptions:GulpSyntaxHighlighterOptions={
                         customTheme:"Custom theme css",
                         theme:"Name"
                     }
@@ -172,7 +172,7 @@ describe('transformBufferFile',()=>{
                     ];
                     themeNameTestOptions.forEach(testOption=>{
                         it(testOption.description,(done)=>{
-                            var syntaxHighlighterOptions:SyntaxHighlighterOptions={};
+                            var syntaxHighlighterOptions:GulpSyntaxHighlighterOptions={};
                             if(testOption.description==="Options"){
                                 syntaxHighlighterOptions.theme=testOption.expected
                             }
@@ -189,7 +189,7 @@ describe('transformBufferFile',()=>{
             describe('additional css',()=>{
                 [true,false].forEach(should=>{
                     it(should?"should if in options":"should not if not in options",done=>{
-                        const syntaxHighlighterOptions:SyntaxHighlighterOptions={};
+                        const syntaxHighlighterOptions:GulpSyntaxHighlighterOptions={};
                         if(should){
                             syntaxHighlighterOptions.additionalCss="some additional css";
                         }
@@ -208,9 +208,9 @@ describe('transformBufferFile',()=>{
         })
         describe('should apply syntax highlighter with config ( which defaults ) and SyntaxHighlighterGlobalParamsNoToolbar ',()=>{
             interface ApplySyntaxHighlighterTestOption{
-                config?:SyntaxHighlighterOptions["config"],
-                expectedConfig:SyntaxHighlighterOptions["config"],
-                globalParams?:SyntaxHighlighterOptions["globalParams"],
+                config?:GulpSyntaxHighlighterOptions["config"],
+                expectedConfig:GulpSyntaxHighlighterOptions["config"],
+                globalParams?:GulpSyntaxHighlighterOptions["globalParams"],
                 expectedGlobalParams:SyntaxHighlighterGlobalParamsNoToolbar,
                 description:string
             }
@@ -249,7 +249,7 @@ describe('transformBufferFile',()=>{
     })
     describe('isPartial',()=>{
         it('should be called with the html and the file',(done)=>{
-            var syntaxHighlighterOptions:SyntaxHighlighterOptions={
+            var syntaxHighlighterOptions:GulpSyntaxHighlighterOptions={
                 isPartialFn:jest.fn()
             }
             var file=getMockBufferFile() as any;
@@ -275,7 +275,7 @@ describe('transformBufferFile',()=>{
                 ]
                 getNewContentsTestOptions.forEach(testOption=>{
                     it(testOption.description,(done)=>{ 
-                        const syntaxHighlighterOptions:SyntaxHighlighterOptions={
+                        const syntaxHighlighterOptions:GulpSyntaxHighlighterOptions={
                             isPartialFn:function(){
                                 return testOption.expected
                             }
