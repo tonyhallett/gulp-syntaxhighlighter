@@ -1,7 +1,7 @@
 import {SyntaxHighlighterTransform} from '../gulp-syntaxhighlighter/syntaxHighlighterTransform'
 import { IMinifier, ISyntaxHighlighterAssetLoader, IJsDomDocumentFactory, ISyntaxHighlighterDocumentManagerFactory, IToggleDocumentManagerFactory, SyntaxHighlighterGlobalParamsNoToolbar } from '../gulp-syntaxhighlighter/interfaces';
 import {createStreamFile,createBufferFile,pluginTest,File} from 'gulpPluginTestHelpers'
-import { SyntaxHighlighterOptions } from '../gulp-syntaxhighlighter/publicInterfaces';
+import { GulpSyntaxHighlighterOptions } from '../gulp-syntaxhighlighter/publicInterfaces';
 
 interface TExpectedTest<TExpected>{
     description:string,
@@ -20,7 +20,7 @@ describe('transformBufferFile',()=>{
                 expectation(files);
             })
     }
-    function getTransform(options:SyntaxHighlighterOptions={})
+    function getTransform(options:GulpSyntaxHighlighterOptions={})
     {
         return new SyntaxHighlighterTransform(
             options,

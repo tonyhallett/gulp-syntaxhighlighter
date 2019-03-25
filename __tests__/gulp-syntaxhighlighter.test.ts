@@ -1,6 +1,6 @@
 import { SyntaxHighlighterTransform } from '../gulp-syntaxhighlighter/syntaxHighlighterTransform';
 import { syntaxHighlighter } from '../gulp-syntaxhighlighter/gulp-syntaxhighlighter';
-import { SyntaxHighlighterOptions } from '../gulp-syntaxhighlighter/publicInterfaces';
+import { GulpSyntaxHighlighterOptions } from '../gulp-syntaxhighlighter/publicInterfaces';
 
 describe('gulp-syntaxhighlighter',()=>{
     it('should create a SyntaxHighlighterTransform',()=>{
@@ -10,7 +10,7 @@ describe('gulp-syntaxhighlighter',()=>{
         expect((syntaxHighlighter() as any).options).toEqual({});
     })
     it('should pass through options if provided',()=>{
-        const options:SyntaxHighlighterOptions={theme:"Theme"};
+        const options:GulpSyntaxHighlighterOptions={theme:"Theme"};
         expect((syntaxHighlighter(options) as any).options).toBe(options);
     })
 })
