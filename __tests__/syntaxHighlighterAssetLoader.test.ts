@@ -1,5 +1,5 @@
 import {SyntaxHighlighterAssetLoader} from '../gulp-syntaxhighlighter/syntaxHighlighterAssetLoader'
-import {expectedContainingDirectory} from '../__tests_helpers/dirnameHelper'
+import {expectedContainingDirectory} from '../__tests__helpers/dirnameHelper'
 jest.mock('path',()=>{
     return {
         resolve:jest.fn((dir:string,segment:string)=>{

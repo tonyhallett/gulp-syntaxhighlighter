@@ -1,6 +1,6 @@
 import {ToggleDocumentManager} from '../gulp-syntaxhighlighter/toggleDocumentManager'
 import { IToggleConfig, IClassNames } from '../gulp-syntaxhighlighter/publicInterfaces';
-import {expectedContainingDirectory} from '../__tests_helpers/dirnameHelper';
+import {expectedContainingDirectory} from '../__tests__helpers/dirnameHelper';
 
 jest.mock('path',()=>{
     return {
