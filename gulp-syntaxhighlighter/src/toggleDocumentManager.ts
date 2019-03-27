@@ -1,4 +1,4 @@
-///<reference path="../toggle/toggleDefns.d.ts"/>
+///<reference path="../../toggle/src/toggleDefns.d.ts"/>
 import * as path from 'path'
 import * as fs from 'fs'
 import { IToggleDocumentManager, IJsDomDocument, IMinifier } from './interfaces'
@@ -77,7 +77,7 @@ export class ToggleDocumentManager implements IToggleDocumentManager {
         return this.minifier.minifyScript(script);
     }
     private readToggle() {
-        return fs.readFileSync(path.join(__dirname, "toggle/toggle.js"), "utf8");
+        return fs.readFileSync(path.join(__dirname, "toggle.js"), "utf8");
     }
     private defaultCreateToggleFn(): string {
         return `

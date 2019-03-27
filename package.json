@@ -11,13 +11,12 @@
     "toggle/toggle.js"
   ],
   "scripts": {
-    "test": "jest",
+    "test": "jest --projects .\\gulp-syntaxhighlighter .\\toggle",
     "tsc": "tsc"
   },
   "author": {
     "name": "Tony Hallett",
-    "email": "tonyhallett74@gmail.com",
-    "url": ""
+    "email": "tonyhallett74@gmail.com"
   },
   "keywords": [
     "gulp",
@@ -43,22 +42,8 @@
     "gulpplugintesthelpers": "^1.0.3",
     "jest": "^24.5.0",
     "ts-jest": "^24.0.0",
-    "typescript": "^3.3.4000"
-  },
-  "jest": {
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
-    ],
-    "testEnvironment": "node",
-    "collectCoverage": true
+    "typescript": "^3.3.4000",
+    "gulp-typescript": "^5.0.1",
+    "ts-node": "^8.0.3"
   }
 }

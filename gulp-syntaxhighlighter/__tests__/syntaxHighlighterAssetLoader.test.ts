@@ -1,29 +1,36 @@
-import {SyntaxHighlighterAssetLoader} from '../gulp-syntaxhighlighter/syntaxHighlighterAssetLoader'
-import {expectedContainingDirectory} from '../__tests__helpers/dirnameHelper'
+import {SyntaxHighlighterAssetLoader} from '../src/syntaxHighlighterAssetLoader'
+import {srcDirectory} from '../__tests__helpers/dirnameHelper'
+
 jest.mock('path',()=>{
     return {
         resolve:jest.fn((dir:string,segment:string)=>{
-            expect(dir).toEqual(expectedContainingDirectory);
+            expect(dir).toEqual(srcDirectory);
 
-            if(segment==="./syntaxHighlighter/shCore"){
+            if(segment==="shCore"){
                 return "themePrefix"
             }
-            if(segment==="./syntaxHighlighter/shCore.min.js"){
+            if(segment==="shCore.min.js"){
                 return "shcoreminjs";
             }
-            if(segment==="./syntaxHighlighter/shCore.js"){
+            if(segment==="shCore.js"){
                 return "shcorejs";
             }
             if(segment==="syntaxHighlighter"){
                 return "syntaxHighlighterDir";
             }
+            if(segment==="shCoreTheTheme.min.css"){
+                return "minifiedTheThemePath"
+            }
+            if(segment==="shCoreTheTheme.css"){
+                return "theThemePath"
+            }
         })
     }
 })
-jest.mock('../gulp-syntaxhighlighter/fileHelper',()=>{
+jest.mock('../src/fileHelper',()=>{
     return {
-        getFilteredFilesFromDirectoryDeep:jest.fn((dir:string,filter:(f:string)=>boolean)=>{
-            if(dir==="syntaxHighlighterDir"){
+        getFilteredFilesFromDirectoryDeep:jest.fn((dir:string,filter:(f:string,fn:string)=>boolean)=>{
+            if(dir===srcDirectory){
                 const brushes = [
                     "notABrush.min.js",
                     "notABrush.js",
@@ -34,7 +41,7 @@ jest.mock('../gulp-syntaxhighlighter/fileHelper',()=>{
                     "shBrush2.js",
                     "stillNotABrush.js"
                 ]
-                return brushes.filter(filter);
+                return brushes.filter((b)=>filter("",b));
             }
         })
     }
@@ -42,11 +49,11 @@ jest.mock('../gulp-syntaxhighlighter/fileHelper',()=>{
 jest.mock('fs',()=>{
     return {
         readFileSync:jest.fn((path:string)=>{
-            if(path==="themePrefixTheTheme.min.css"){
-                return "minifiedTheme";
+            if(path==="minifiedTheThemePath"){
+                return "minifiedTheTheme";
             }
-            if(path==="themePrefixTheTheme.css"){
-                return "theme";
+            if(path==="theThemePath"){
+                return "theTheme";
             }
             if(path==="shcoreminjs"){
                 return "shcoremin";
@@ -77,7 +84,7 @@ describe('SyntaxHighlighterAssetLoader',()=>{
             it(`should return the ${minified?'minified':'unminified'} theme from the resolved path`,()=>{
                 var assetLoader=new SyntaxHighlighterAssetLoader();
                 var loadedTheme=assetLoader.getTheme(minified,"TheTheme");
-                expect(loadedTheme).toEqual(minified?"minifiedTheme":"theme");
+                expect(loadedTheme).toEqual(minified?"minifiedTheTheme":"theTheme");
             })
         })
     })

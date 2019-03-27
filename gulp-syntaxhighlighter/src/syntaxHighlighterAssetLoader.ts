@@ -5,21 +5,21 @@ import { getFilteredFilesFromDirectoryDeep } from "./fileHelper"
 
 export class SyntaxHighlighterAssetLoader implements ISyntaxHighlighterAssetLoader {
     private getShCore(minified: boolean) {
-        const shCorePath = "./syntaxHighlighter/shCore" + this.getJsExtension(minified);
+        const shCorePath = "shCore" + this.getJsExtension(minified);
         return fs.readFileSync(path.resolve(__dirname, shCorePath), "utf8");
     }
 
     private getBrushFiles(minified: boolean) {
-        return getFilteredFilesFromDirectoryDeep(path.resolve(__dirname, "syntaxHighlighter"), (f => {
-            if(f.startsWith("shBrush")){
+        return getFilteredFilesFromDirectoryDeep(__dirname, (f,fn) => {
+            if(fn.startsWith("shBrush")){
                 if(minified){
-                    return f.endsWith(".min.js");
+                    return fn.endsWith(".min.js");
                 }else{
-                    return f.endsWith(".js")&&!f.endsWith(".min.js");
+                    return fn.endsWith(".js")&&!fn.endsWith(".min.js");
                 }
             }
             return false;
-        }));
+        });
     }
 
     private getJsExtension(minified: boolean) {
@@ -31,8 +31,8 @@ export class SyntaxHighlighterAssetLoader implements ISyntaxHighlighterAssetLoad
     }
 
     getTheme(minified: boolean, theme: string): string {
-        const themePrefix = path.resolve(__dirname, "./syntaxHighlighter/shCore");
-        const themePath = themePrefix + theme + (minified ? ".min" : "") + ".css";
+        const themeFileName = "shCore" + theme + (minified ? ".min" : "") + ".css";
+        const themePath = path.resolve(__dirname,themeFileName);
         return fs.readFileSync(themePath, "utf8");
     }
 

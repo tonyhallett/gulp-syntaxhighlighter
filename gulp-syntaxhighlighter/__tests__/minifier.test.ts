@@ -1,4 +1,4 @@
-import { Minifier} from '../gulp-syntaxhighlighter/minifier'
+import { Minifier} from '../src/minifier'
 
 const spiedLog=jest.spyOn(global.console,"log");
 jest.mock('uglifycss',()=>{

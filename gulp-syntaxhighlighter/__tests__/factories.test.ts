@@ -1,21 +1,21 @@
-import {JsDomDocumentFactory} from '../gulp-syntaxhighlighter/jsDomDocumentFactory'
-import {JsDomDocument} from '../gulp-syntaxhighlighter/jsDomDocument'
-import {ToggleDocumentManager} from '../gulp-syntaxhighlighter/toggleDocumentManager'
-import {ToggleDocumentManagerFactory} from '../gulp-syntaxhighlighter/toggleDocumentManagerFactory'
-import {SyntaxHighlighterDocumentManagerFactory} from '../gulp-syntaxhighlighter/syntaxHighlighterDocumentManagerFactory'
-import {SyntaxHighlighterDocumentManager} from '../gulp-syntaxhighlighter/syntaxHighlighterDocumentManager'
+import {JsDomDocumentFactory} from '../src/jsDomDocumentFactory'
+import {JsDomDocument} from '../src/jsDomDocument'
+import {ToggleDocumentManager} from '../src/toggleDocumentManager'
+import {ToggleDocumentManagerFactory} from '../src/toggleDocumentManagerFactory'
+import {SyntaxHighlighterDocumentManagerFactory} from '../src/syntaxHighlighterDocumentManagerFactory'
+import {SyntaxHighlighterDocumentManager} from '../src/syntaxHighlighterDocumentManager'
 
-jest.mock('../gulp-syntaxhighlighter/jsDomDocument',()=>{
+jest.mock('../src/jsDomDocument',()=>{
     return {
         JsDomDocument:jest.fn().mockReturnValue({})
     }
 })
-jest.mock('../gulp-syntaxhighlighter/toggleDocumentManager',()=>{
+jest.mock('../src/toggleDocumentManager',()=>{
     return {
         ToggleDocumentManager:jest.fn().mockReturnValue({})
     }
 })
-jest.mock('../gulp-syntaxhighlighter/syntaxHighlighterDocumentManager',()=>{
+jest.mock('../src/syntaxHighlighterDocumentManager',()=>{
     return {
         SyntaxHighlighterDocumentManager:jest.fn().mockReturnValue({})
     }

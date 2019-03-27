@@ -1,6 +1,6 @@
-import { SyntaxHighlighterTransform } from '../gulp-syntaxhighlighter/syntaxHighlighterTransform';
-import { syntaxHighlighter } from '../gulp-syntaxhighlighter/gulp-syntaxhighlighter';
-import { GulpSyntaxHighlighterOptions } from '../gulp-syntaxhighlighter/publicInterfaces';
+import { SyntaxHighlighterTransform } from '../src/syntaxHighlighterTransform';
+import { syntaxHighlighter } from '../src/gulp-syntaxhighlighter';
+import { GulpSyntaxHighlighterOptions } from '../src/publicInterfaces';
 
 describe('gulp-syntaxhighlighter',()=>{
     it('should create a SyntaxHighlighterTransform',()=>{

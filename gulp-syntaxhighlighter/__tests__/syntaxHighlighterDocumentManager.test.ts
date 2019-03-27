@@ -1,4 +1,4 @@
-import {SyntaxHighlighterDocumentManager} from '../gulp-syntaxhighlighter/syntaxHighlighterDocumentManager'
+import {SyntaxHighlighterDocumentManager} from '../src/syntaxHighlighterDocumentManager'
 
 describe('SyntaxHighlighterDocumentManager',()=>{
     describe('css',()=>{

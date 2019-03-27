@@ -1,4 +1,4 @@
-///<reference path="../toggle/toggleDefns.d.ts"/>
+///<reference path="../../toggle/src/toggleDefns.d.ts"/>
 import { GulpTransformBaseOptions,File } from 'gulptransformbase'
 export type IClassNames=Partial<ClassNames>
 export type IToggleConfigMessages=Partial<ToggleConfigMessages>

@@ -1,11 +1,11 @@
-import {ToggleDocumentManager} from '../gulp-syntaxhighlighter/toggleDocumentManager'
-import { IToggleConfig, IClassNames } from '../gulp-syntaxhighlighter/publicInterfaces';
-import {expectedContainingDirectory} from '../__tests__helpers/dirnameHelper';
+import {ToggleDocumentManager} from '../src/toggleDocumentManager'
+import { IToggleConfig, IClassNames } from '../src/publicInterfaces';
+import {srcDirectory} from '../__tests__helpers/dirnameHelper';
 
 jest.mock('path',()=>{
     return {
         join:jest.fn((dir:string,togglejs:string)=>{
-            expect(dir).toBe(expectedContainingDirectory);
+            expect(dir).toBe(srcDirectory);
             return togglejs;
         })
     }
@@ -13,7 +13,7 @@ jest.mock('path',()=>{
 jest.mock('fs',()=>{
     return {
         readFileSync:jest.fn((path:string)=>{
-            if(path==="toggle/toggle.js"){
+            if(path==="toggle.js"){
                 return "togglejs"
             }
         })

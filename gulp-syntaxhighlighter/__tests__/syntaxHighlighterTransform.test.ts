@@ -1,7 +1,7 @@
-import {SyntaxHighlighterTransform} from '../gulp-syntaxhighlighter/syntaxHighlighterTransform'
-import { SyntaxHighlighterGlobalParamsNoToolbar } from '../gulp-syntaxhighlighter/interfaces';
+import {SyntaxHighlighterTransform} from '../src/syntaxHighlighterTransform'
+import { SyntaxHighlighterGlobalParamsNoToolbar } from '../src/interfaces';
 import { pluginTest,File} from 'gulpPluginTestHelpers'
-import { GulpSyntaxHighlighterOptions } from '../gulp-syntaxhighlighter/publicInterfaces';
+import { GulpSyntaxHighlighterOptions } from '../src/publicInterfaces';
 
 interface TExpectedTest<TExpected>{
     description:string,

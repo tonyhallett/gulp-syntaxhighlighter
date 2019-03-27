@@ -1,4 +1,4 @@
-import {JsDomDocument} from '../gulp-syntaxhighlighter/jsDomDocument'
+import {JsDomDocument} from '../src/jsDomDocument'
 import {JSDOM} from 'jsdom'
 
 interface MockElement{
