@@ -4,7 +4,7 @@ import {GulpSyntaxHighlighterOptions} from '../gulp-syntaxhighlighter/src/public
 function createExampleBuild(example:string,options:GulpSyntaxHighlighterOptions){
     const task=()=>{
         var syntaxHighlighter=require('../dist/gulp-syntaxhighlighter').syntaxHighlighter;
-        return gulp.src(`../demo/src/${example}.html`).pipe(syntaxHighlighter(options)).pipe(gulp.dest("../demo/dest"));
+        return gulp.src(`demo/src/${example}.html`).pipe(syntaxHighlighter(options)).pipe(gulp.dest("demo/dest"));
     }
     task.displayName="build" + example; 
     return task;

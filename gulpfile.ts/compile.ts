@@ -9,6 +9,6 @@ function createCompile(taskName:string,tsconfigPath:string){
     task.displayName=taskName;
     return task;
 }
-export const gshTsCompile=createCompile("gshTsCompile","../gulp-syntaxhighlighter/tsconfig.json");
-export const toggleCompile=createCompile("toggleCompile","../toggle/tsconfig.json");
+export const gshTsCompile=createCompile("gshTsCompile","./gulp-syntaxhighlighter/tsconfig.json");
+export const toggleCompile=createCompile("toggleCompile","./toggle/tsconfig.json");
 export const compile=parallel(gshTsCompile,toggleCompile)

@@ -1,1 +1,1 @@
-export const destination="../dist";
+export const destination="./dist";
