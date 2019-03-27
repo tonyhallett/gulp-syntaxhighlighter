@@ -23,7 +23,8 @@ export class ToggleDocumentManager implements IToggleDocumentManager {
         toggle: "toggle",
         hideToggle: "hideToggle",
         showToggle: "showToggle",
-        isShowing: "isShowing"
+        toggleContainerShown: "toggleContainerShown",
+        toggleContainerHidden: "toggleContainerHidden"
     }
     private createToggleFn!: string;
     private css!:string;

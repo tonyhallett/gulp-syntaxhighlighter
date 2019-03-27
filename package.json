@@ -37,8 +37,11 @@
     "uglifycss": "0.0.29"
   },
   "devDependencies": {
+    "@types/fs-extra": "^5.0.5",
+    "@types/gulp": "^4.0.6",
     "@types/jest": "^24.0.11",
     "@types/node": "^9.6.7",
+    "fs-extra": "^7.0.1",
     "gulp": "^4.0.0",
     "gulp-typescript": "^5.0.1",
     "gulpplugintesthelpers": "^1.0.3",

@@ -17,9 +17,11 @@ interface ToggleConfigMessages {
 }
 interface ClassNames {
     toggleContainer: string,
+    toggleContainerShown: string,
+    toggleContainerHidden: string,
     toggleText: string,
     toggle: string,
     showToggle: string,
     hideToggle: string,
-    isShowing: string
+    
 }

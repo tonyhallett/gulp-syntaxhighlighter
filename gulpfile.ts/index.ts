@@ -3,6 +3,9 @@ import {jestTests} from './jesttests'
 import {compile,gshTsCompile,toggleCompile} from './compile'
 import {assetsToDist} from './assets'
 import {buildDemo} from './demo'
+import {destination} from './dest'
+import * as fs from 'fs-extra';
+import * as path from 'path';
 
 export {
     jestTests,
@@ -11,6 +14,9 @@ export {
     buildDemo
 }
 
+function cleanDist(){
+    return fs.emptyDir(path.join(process.cwd(),destination));
+}
 export const compileWithAssets=gulp.parallel(assetsToDist,compile);
 
-export const build=gulp.series(jestTests,compileWithAssets,buildDemo);
+export const build=gulp.series(jestTests,cleanDist,compileWithAssets,buildDemo);

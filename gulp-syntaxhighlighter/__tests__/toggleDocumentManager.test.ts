@@ -86,7 +86,8 @@ describe('ToggleDocumentManager addToggle',()=>{
                         toggle: "toggle",
                         hideToggle: "hideToggle",
                         showToggle: "showToggle",
-                        isShowing: "isShowing"
+                        toggleContainerShown: "toggleContainerShown",
+                        toggleContainerHidden: "toggleContainerHidden"
                     },
                     messages:{
                         hideMessage: "",
@@ -115,7 +116,8 @@ describe('ToggleDocumentManager addToggle',()=>{
                         toggle: "toggle",
                         hideToggle: "hideToggle",
                         showToggle: "showToggle",
-                        isShowing: "isShowing"
+                        toggleContainerShown: "toggleContainerShown",
+                        toggleContainerHidden: "toggleContainerHidden"
                     },
                     messages:{
                         hideMessage: "",
@@ -151,7 +153,8 @@ describe('ToggleDocumentManager addToggle',()=>{
                         toggle: "toggle",
                         hideToggle: "hideToggle",
                         showToggle: "showToggle",
-                        isShowing: "isShowing"
+                        toggleContainerShown: "toggleContainerShown",
+                        toggleContainerHidden: "toggleContainerHidden"
                     },
                     messages:{
                         hideMessage: "MyHideMessage",

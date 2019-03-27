@@ -1,5 +1,7 @@
 import * as gulp from 'gulp'
 import {GulpSyntaxHighlighterOptions} from '../gulp-syntaxhighlighter/src/publicInterfaces'
+import * as fs from 'fs-extra';
+import * as path from 'path';
 
 function createExampleBuild(example:string,options:GulpSyntaxHighlighterOptions){
     const task=()=>{
@@ -46,13 +48,19 @@ const buildExample2=createExampleBuild("example2",{
             when:"Always",
             placement:"Below"
         },
-        customCss:".t_toggle{ stroke:orange;top:0.125em;position:relative;height:1em;width:1em }" +
-        ".t_toggleText{ font-size:1em}" + 
-        ".t_toggleContainer{ border-style: solid;border-width:2;border-color:red}",
+        customCss:".t_toggle{ stroke:orange;top:0.125em;position:relative;height:4em;width:4em }" +
+        ".t_toggleText{ font-size:2em}" + 
+        ".t_toggleContainer{ border-style: solid;border-width:1}" + 
+        ".t_isShowing{ border-style: solid;border-color:green}" + 
+        ".t_isHidden{ border-style: dotted;border-width:3;border-color:red}" + 
+        ".t_hideToggle>rect{fill:yellow}" +
+        ".t_showToggle>circle{fill:red}" +
+        ".t_isHidden t_toggleText{ font-style:italic}",
         classNames:{
             hideToggle:"t_hideToggle",
             toggleText:"t_toggleText",
-            isShowing:"t_isShowing",
+            toggleContainerShown:"t_isShowing",
+            toggleContainerHidden:"t_isHidden",
             showToggle:"t_showToggle",
             toggle:"t_toggle",
             toggleContainer:"t_toggleContainer"
@@ -61,4 +69,10 @@ const buildExample2=createExampleBuild("example2",{
     }
 
 })
-export const buildDemo= gulp.parallel(buildExample1,buildExample2);
+const defaultOptionsExample=createExampleBuild("defaultOptionsExample",{toggleConfig:{}});
+
+function cleanDest(){
+    return fs.emptyDir(path.join(process.cwd(),"demo/dest"));
+}
+
+export const buildDemo= gulp.series(cleanDest,gulp.parallel(defaultOptionsExample,buildExample1,buildExample2));

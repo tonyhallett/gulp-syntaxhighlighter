@@ -52,7 +52,7 @@ function createToggle(highlighterElement: HTMLElement, hide: boolean, messages: 
 
     function addToggle(hidden: boolean) {
         if (currentEl && !isHidden) {
-            removeClass(currentEl, classNames.isShowing);
+            removeClass(currentEl, classNames.toggleContainerShown);
         }
 
         isHidden = hidden;
@@ -75,7 +75,7 @@ function createToggle(highlighterElement: HTMLElement, hide: boolean, messages: 
         if (hidden) {
             addClass(highlighterElement, "collapsed");
         } else {
-            addClass(currentEl, classNames.isShowing);
+            addClass(currentEl, classNames.toggleContainerShown);
             removeClass(highlighterElement, "collapsed");
         }
     }

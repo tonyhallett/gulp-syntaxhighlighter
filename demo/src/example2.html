@@ -15,18 +15,24 @@
             },
             toggleConfig:{
                 toggleState:"Show",
-                message:{
+                messages:{
                     message:"Message",
                     when:"Always",
                     placement:"Below"
                 },
-                customCss:".t_toggle{ stroke:orange;top:0.125em;position:relative;height:1em;width:1em }" +
-                ".t_toggleText{ font-size:1em}" + 
-                ".t_toggleContainer{ border-style: solid;border-width:2;border-color:red}",
+                customCss:".t_toggle{ stroke:orange;top:0.125em;position:relative;height:4em;width:4em }" +
+                ".t_toggleText{ font-size:2em}" + 
+                ".t_toggleContainer{ border-style: solid;border-width:1}" + 
+                ".t_isShowing{ border-style: solid;border-color:green}" + 
+                ".t_isHidden{ border-style: dotted;border-width:3;border-color:red}" + 
+                ".t_hideToggle>rect{fill:yellow}" +
+                ".t_showToggle>circle{fill:red}" +
+                ".t_isHidden t_toggleText{ font-style:italic}",
                 classNames:{
                     hideToggle:"t_hideToggle",
                     toggleText:"t_toggleText",
-                    isShowing:"t_isShowing",
+                    toggleContainerShown:"t_isShowing",
+                    toggleContainerHidden:"t_isHidden",
                     showToggle:"t_showToggle",
                     toggle:"t_toggle",
                     toggleContainer:"t_toggleContainer"
@@ -34,7 +40,7 @@
                 
             }
 
-        })).pipe(gulp.dest("destPluginTest"));
+        })).pipe(gulp.dest("somedest"));
 </script>
 <h1>Custom settings:</h1>
 <div>Custom isPartialFn - always returning false.  Despite the src being loose html it has been transformed to have html, head and body elements.</div>
