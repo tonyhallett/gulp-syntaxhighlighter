@@ -6,7 +6,7 @@ import { GulpSyntaxHighlighterOptions} from './publicInterfaces'
 
 export class SyntaxHighlighterTransform extends GulpTransformBase<GulpSyntaxHighlighterOptions> {
 
-    //region defaults
+    //#region defaults
     private globalParams:GulpSyntaxHighlighterOptions["globalParams"]={}
     private config:GulpSyntaxHighlighterOptions["config"] = {}
     private themeName = "Default";
