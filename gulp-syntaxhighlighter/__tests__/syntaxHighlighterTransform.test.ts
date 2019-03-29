@@ -53,16 +53,19 @@ describe('syntaxHighlighterTransform',()=>{
         jest.clearAllMocks();
     });
     describe('isPartial',()=>{
-        it.each`
-            testName                | html                 | isPartial
-            ${"starts with doctype"}| ${"<!doctype>"} | ${false}
-            ${"starts with html"}| ${"<html>"} | ${false}
-            ${"starts with head"}| ${"<head>"} | ${false}
-            ${"starts with body"}| ${"<head>"} | ${false}
-            ${"starts with div"}| ${"<div>"} | ${true}
-            `('$testName should be partial : $isPartial',({html,isPartial})=>{
-                var sht=getTransform();
-                expect((sht as any).isPartial(html,null)).toBe(isPartial);
+        describe.each([
+            ["starts with doctype","<!doctype>",false],
+            ["starts with html","<html>",false],
+            ["starts with head","<head>",false],
+            ["starts with body","<body>",false],
+            ["starts with div","<div>",true],
+            ])
+            ('%p',(_,html,isPartial)=>{
+                it(`should ${isPartial?"be partial":"not be partial"}`,()=>{
+                    var sht=getTransform();
+                     expect((sht as any).isPartial(html,null)).toBe(isPartial);
+                })
+                
             });
         })
 

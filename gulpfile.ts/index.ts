@@ -4,6 +4,7 @@ import {compile,gshTsCompile,toggleCompile} from './compile'
 import {assetsToDist} from './assets'
 import {buildDemo} from './demo'
 import {destination} from './dest'
+import {generateExported} from './toggleExport'
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
@@ -11,7 +12,8 @@ export {
     jestTests,
     assetsToDist,
     compile,gshTsCompile,toggleCompile,
-    buildDemo
+    buildDemo,
+    generateExported
 }
 
 function cleanDist(){

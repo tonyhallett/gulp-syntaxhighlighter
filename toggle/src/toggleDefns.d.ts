@@ -1,9 +1,19 @@
-type When = "Always" | "Hidden" | "Never";
+
+
+type WhenAlways ="Always";
+type WhenHidden = "Hidden";
+type WhenNever = "Never";
+type When = WhenAlways | WhenHidden | WhenNever;
+
+//todo probably should be explicit with Never
+type ToggleState="Show" | "Hide"
+type DataToggleState=ToggleState|"Never"
 interface ToggleConfig {
-    toggleState?: "Show" | "Hide",
+    toggleState?: ToggleState,
     messages: ToggleConfigMessages,
     classNames: ClassNames
 }
+type MessagePlacement="Right" | "Below";
 interface ToggleConfigMessages {
     when: When,
     prefix: string,
@@ -13,7 +23,7 @@ interface ToggleConfigMessages {
     hideMessage: string,
     showMessage: string,
     message: string,
-    placement: "Right" | "Below"
+    placement: MessagePlacement;
 }
 interface ClassNames {
     toggleContainer: string,
@@ -24,4 +34,14 @@ interface ClassNames {
     showToggle: string,
     hideToggle: string,
     
+}
+
+
+interface HideShowMessages {
+    showMessage: string,
+    hiddenMessage: string
+}
+
+type HideShowMessagesWhen = HideShowMessages & {
+    when:When
 }

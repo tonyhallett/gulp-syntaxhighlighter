@@ -11,7 +11,8 @@
     "toggle/toggle.js"
   ],
   "scripts": {
-    "test": "jest --projects .\\gulp-syntaxhighlighter .\\toggle",
+    "test": "jest --projects .\\gulp-syntaxhighlighter .\\toggle\\src\\toggleExport",
+    "testToggle":"jest --projects .\\toggle\\src\\toggleExport",
     "tsc": "tsc"
   },
   "author": {
