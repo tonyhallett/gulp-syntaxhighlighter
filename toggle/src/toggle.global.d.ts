@@ -1,12 +1,12 @@
-type HtmlOrSvg=HTMLElement|SVGElement;
+type Toggle=HTMLElement|SVGElement;
 type singleWithDelay={
-    toggleElement:HtmlOrSvg,
+    toggleElement:Toggle,
     delay:number
 }
-type toggleElementSingle=HtmlOrSvg|singleWithDelay;
+type toggleElementSingle=Toggle|singleWithDelay;
 type toggleElementBoth={
-    showToggle:HtmlOrSvg,
-    hideToggle:HtmlOrSvg,
+    showToggle:Toggle,
+    hideToggle:Toggle,
 }
 type createToggleElementReturn=toggleElementSingle|toggleElementBoth
 

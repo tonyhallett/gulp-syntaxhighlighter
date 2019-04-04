@@ -4,7 +4,7 @@ import {compile,gshTsCompile,toggleCompile} from './compile'
 import {assetsToDist} from './assets'
 import {buildDemo} from './demo'
 import {destination} from './dest'
-import {generateExported} from './toggleExport'
+import {generateExported,tempTaskForDebug} from './toggleExport'
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
@@ -13,7 +13,8 @@ export {
     assetsToDist,
     compile,gshTsCompile,toggleCompile,
     buildDemo,
-    generateExported
+    generateExported,
+    tempTaskForDebug
 }
 
 function cleanDist(){

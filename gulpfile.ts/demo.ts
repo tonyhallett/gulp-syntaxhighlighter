@@ -22,10 +22,18 @@ const buildExample1=createExampleBuild("example1",{
             when:"Always",
             placement:"Right"
         },
-        createToggleFn:"function createToggleElement(show){ " + 
-        "var img= document.createElement('img');" +
-        "img.src=show?'https://www.shareicon.net/data/32x32/2016/06/30/789009_multimedia_512x512.png':'https://www.shareicon.net/data/32x32/2016/06/30/789031_multimedia_512x512.png';" +
-        "return img;}"
+        createToggleFn:`
+        function createToggleElement(){ 
+            function createToggleHideShow(show){ 
+                var img= document.createElement('img');
+                img.src=show?'https://www.shareicon.net/data/32x32/2016/06/30/789009_multimedia_512x512.png':'https://www.shareicon.net/data/32x32/2016/06/30/789031_multimedia_512x512.png';
+                return img;
+            }
+            return {
+                showToggle:createToggleHideShow(true),
+                hideToggle:createToggleHideShow(false)
+            }
+        }`
     }
 });
 const buildExample2=createExampleBuild("example2",{
@@ -70,9 +78,85 @@ const buildExample2=createExampleBuild("example2",{
 
 })
 const defaultOptionsExample=createExampleBuild("defaultOptionsExample",{toggleConfig:{}});
+const singleToggleExample=createExampleBuild("singleToggle",{minifiedOutput:false, toggleConfig:{
+    createToggleFn:`
+    function createToggleElement(){
+        function createToggle(){
+            var xmlns="http://www.w3.org/2000/svg"
+
+            var svg=document.createElementNS(xmlns,"svg");
+            
+            svg.setAttributeNS(null,"fill","none");
+            svg.setAttributeNS(null,"stroke-linecap","round");
+            svg.setAttributeNS(null,"stroke-linejoin","round");
+            svg.setAttributeNS(null,"stroke-width","2");
+            svg.setAttributeNS(null,"viewBox","0 0 24 24");
+           
+            var rect=document.createElementNS(xmlns,"rect");
+            rect.setAttributeNS(null,"height",14);
+            rect.setAttributeNS(null,"rx",7);
+            rect.setAttributeNS(null,"ry",7);
+            rect.setAttributeNS(null,"width",22);
+            rect.setAttributeNS(null,"x",1);
+            rect.setAttributeNS(null,"y",5);
+
+            var circle=document.createElementNS(xmlns,"circle")
+            circle.setAttributeNS(null,"cy",12);
+            circle.setAttributeNS(null,"r",3);
+            circle.setAttributeNS(null,"cx",16);
+
+            svg.append(rect);
+            svg.append(circle);
+            
+            return svg;
+        }
+        return {
+            delay:1000,
+            toggleElement:createToggle(),
+        }
+    }
+    `,
+    customCss:`
+    .toggle{ top:0.125em;position:relative;height:2em;width:2em}
+
+    .toggleContainerInitial.toggleContainerShown .toggle{stroke:green}
+    .toggleContainerInitial.toggleContainerHidden .toggle{stroke:red}
+    .toggleContainerToggled.toggleContainerShown .toggle
+    {
+        
+        stroke:green;
+        transition:stroke 1s
+
+    }
+    .toggleContainerToggled.toggleContainerHidden .toggle
+    {
+        
+        stroke:red;
+        transition:stroke 1s
+    }
+
+
+    .toggleText{ padding:10px; font-size:2em;user-select:none}
+        
+    .toggleContainerInitial.toggleContainerShown circle{cx:8;fill:green}
+    .toggleContainerInitial.toggleContainerHidden circle{cx:16;fill:red}
+    .toggleContainerToggled.toggleContainerShown circle
+    {
+        cx:8;
+        fill:green;
+        transition:cx 1s, fill 1s;
+    }
+    .toggleContainerToggled.toggleContainerHidden circle
+    {
+        cx:16;
+        fill:red;
+        transition:cx 1s,fill 1s
+    }
+    `,
+}});
 
 function cleanDest(){
     return fs.emptyDir(path.join(process.cwd(),"demo/dest"));
 }
 
-export const buildDemo= gulp.series(cleanDest,gulp.parallel(defaultOptionsExample,buildExample1,buildExample2));
+export const buildDemo= gulp.series(cleanDest,gulp.parallel(defaultOptionsExample,buildExample1,buildExample2,singleToggleExample));

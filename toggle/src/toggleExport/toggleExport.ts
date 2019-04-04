@@ -1,59 +1,74 @@
 ///<reference path="../toggleDefns.d.ts"/>
 ///<reference path="../toggle.global.d.ts"/>
 
-export enum ToggleState { Never, Show, Hide };
+
 
 //attribute or config
 export function getToggleState(syntaxHighlighter: HTMLElement, toggleConfig: ToggleConfig) {
     const dataToggle = syntaxHighlighter.getAttribute("data-toggleState");
-    let toggleState: ToggleState = ToggleState.Never;
+    var toggleState: DataToggleState = "Never";
     if (dataToggle === "Show") {
-        toggleState = ToggleState.Show;
+        toggleState = "Show";
     } else if (dataToggle === "Hide") {
-        toggleState = ToggleState.Hide;
-    } else if (dataToggle === "Never") {
-        toggleState = ToggleState.Never;
+        toggleState = "Hide";
+    } else if (dataToggle === "Never") {//don't need this
+        toggleState = "Never";
     } else {
         if (toggleConfig.toggleState === "Show") {
-            toggleState = ToggleState.Show;
+            toggleState = "Show";
         } else if (toggleConfig.toggleState === "Hide") {
-            toggleState = ToggleState.Hide;
+            toggleState = "Hide";
         }
     }
     return toggleState;
 }
 
 export function createToggle(highlighterElement: HTMLElement, hide: boolean, messages: HideShowMessages, messageWhen: When, placement: ToggleConfigMessages["placement"], classNames: ClassNames) {
-    function initializeToggle(toggle:HtmlOrSvg,clickHandler:()=>void){
+    var isHidden = hide;
+    var hasToggled=false;
+    function createClickHandler(additionalOperations?:Function){
+        return function(){
+            isHidden=!isHidden;
+
+            if(additionalOperations){
+                additionalOperations();
+            }
+            performCommonOperations();
+            hasToggled=true;
+        }
+    }
+    function initializeToggle(toggle:Toggle,clickHandler:()=>void){
         addClickHandler(toggle, clickHandler);
         addClassSVGSafe(toggle, classNames.toggle);
     }
-    function initializeSingleToggle(toggle:HtmlOrSvg){
-        initializeToggle(toggle,singleToggleClicked);
+    function initializeSingleToggle(toggle:Toggle){
+        initializeToggle(toggle,createClickHandler());
     }
-    function initializeBothToggles(toggleShow:HtmlOrSvg,toggleHide:HtmlOrSvg){
+    function initializeBothToggles(toggleShow:Toggle,toggleHide:Toggle){
+        var bothToggleClicked=createClickHandler(addVisibleToggleToContainer);
         initializeToggle(toggleShow,bothToggleClicked);
         addClassSVGSafe(toggleShow,classNames.showToggle);
         initializeToggle(toggleHide,bothToggleClicked);
         addClassSVGSafe(toggleHide,classNames.hideToggle);
     }
     
-    let isHidden = hide;
-    let isSingleToggle=false;
-    let singleToggle!:HtmlOrSvg;
-    let delay:number|undefined;
+    
+    var isSingleToggle=false;
+    var singleToggle!:Toggle;
+    var singleDelay:number|undefined;
 
-    let showToggle:HtmlOrSvg;
-    let hideToggle:HtmlOrSvg;
+    var showToggle:Toggle;
+    var hideToggle:Toggle;
     
     const singleOrBothToggles=createToggleElement();
     function determineSingleToggle(singleOrBoth:createToggleElementReturn):singleOrBoth is toggleElementSingle{
         if(singleOrBoth instanceof HTMLElement||singleOrBoth instanceof SVGElement){
+            singleToggle=singleOrBoth;
             return true;
         }
-        let asSingle=singleOrBoth as singleWithDelay;
+        var asSingle=singleOrBoth as singleWithDelay;
         if(asSingle.delay!==undefined){
-            delay=delay;
+            singleDelay=asSingle.delay;
             singleToggle=asSingle.toggleElement;
             return true;
         }
@@ -67,64 +82,107 @@ export function createToggle(highlighterElement: HTMLElement, hide: boolean, mes
         hideToggle=singleOrBothToggles.hideToggle;
         initializeBothToggles(showToggle,hideToggle);
     }
-    let toggleContainer: HTMLDivElement;
+    var toggleContainer: HTMLDivElement;
+    var previousMessageElement:HTMLDivElement|HTMLSpanElement|undefined;
+    var previousVisibleToggle:Toggle;
 
-    
     function createToggleContainer(){
         toggleContainer = document.createElement("div");
         addClass(toggleContainer,classNames.toggleContainer);
-        setToggleContainerIsShowingClass(!hide);
+        addClass(toggleContainer,classNames.toggleContainerInitial);
+        setToggleContainerIsShowingClass();
     }
-    function setToggleContainerIsShowingClass(showing:boolean){
-        let classToRemove = classNames.toggleContainerShown;
-        let classToAdd = classNames.toggleContainerHidden;
-        if(showing){
-            classToRemove = classNames.toggleContainerHidden;
-            classToAdd = classNames.toggleContainerShown;
+    function setToggleContainerIsShowingClass(){
+        var classToRemove = classNames.toggleContainerHidden;
+        var classToAdd = classNames.toggleContainerShown;
+        if(isHidden){
+            classToRemove = classNames.toggleContainerShown;
+            classToAdd = classNames.toggleContainerHidden;
         }
         addClass(toggleContainer,classToAdd);
         removeClass(toggleContainer,classToRemove);
     }
     function addVisibleToggleToContainer(){
-        let visibleToggle=singleToggle;
+        var visibleToggle=singleToggle;
         if(!isSingleToggle){
             visibleToggle=isHidden ? showToggle : hideToggle
         }
-        toggleContainer.appendChild(visibleToggle);
-        
+        if(previousVisibleToggle){
+            toggleContainer.replaceChild(visibleToggle,previousVisibleToggle);
+        }else{
+            toggleContainer.appendChild(visibleToggle);
+        }
+        previousVisibleToggle=visibleToggle;
     }
-    
-    //this is why was recreating
-    function addMessageToToggleContainer(){
+    function getMessage(){
         if (messageWhen === "Always" || messageWhen === "Hidden" && isHidden) {
-            const message = isHidden ? messages.showMessage : messages.hiddenMessage;
-            if (message) {
-                var textEl = document.createElement(placement === "Below" ? "div" : "span");
-                textEl.className = classNames.toggleText;
-                textEl.innerHTML = message;
-
-                toggleContainer.appendChild(textEl);
+            return  isHidden ? messages.showMessage : messages.hiddenMessage;
+        }
+    }
+    function createMessageElement(message:string){
+        var messageElement = document.createElement(placement === "Below" ? "div" : "span");
+        messageElement.className = classNames.toggleText;
+        messageElement.innerHTML = message;
+        return messageElement;
+    }
+    function addMessageToToggleContainer(){
+        const message=getMessage();
+        if(message){
+            var messageElement=createMessageElement(message);
+            if(previousMessageElement){
+                toggleContainer.replaceChild(messageElement,previousMessageElement);
+            }else{
+                toggleContainer.appendChild(messageElement);
             }
+            previousMessageElement=messageElement;            
+        }else{
+            if(previousMessageElement){
+                toggleContainer.removeChild(previousMessageElement);
+            }
+            previousMessageElement=undefined;
         }
     }
     function addToggleContainerBeforeHighlighter(){
         (highlighterElement.parentNode as Node).insertBefore(toggleContainer, highlighterElement);
     }
     function toggleHighlighter(){
+        const collapsedClass="collapsed";
         if (isHidden) {
-            addClass(highlighterElement, "collapsed");
+            addClass(highlighterElement, collapsedClass);
         } else {
-            removeClass(highlighterElement, "collapsed");
+            removeClass(highlighterElement, collapsedClass);
         }
     }
-    //might hof
-    function singleToggleClicked(){
-        isHidden=!isHidden;
-    }
-    function bothToggleClicked(){
+    var singleDelayTimeout:number|undefined;
+    function performCommonOperations(){
+        
+        if(!hasToggled){
+            removeClass(toggleContainer,classNames.toggleContainerInitial);
+            addClass(toggleContainer,classNames.toggleContainerToggled);
+        }
+        
 
+        setToggleContainerIsShowingClass();
+        
+        if(singleDelay){
+            if(singleDelayTimeout){
+                clearTimeout(singleDelayTimeout);
+                singleDelayTimeout=undefined;
+            }else{
+                singleDelayTimeout=setTimeout(()=>{
+                    addMessageToToggleContainer();
+                    toggleHighlighter();
+                    singleDelayTimeout=undefined;
+                },singleDelay)
+            }
+            
+        }else{
+            addMessageToToggleContainer();
+            toggleHighlighter();
+        }
+        
     }
-    
+
     createToggleContainer();
     addVisibleToggleToContainer();
     addMessageToToggleContainer();
@@ -145,8 +203,8 @@ export function getHideShowMessagesWhen(syntaxHighlighter: HTMLElement, toggleCo
             return captionStr;
         }
 
-        let showMessage = "";
-        let hideMessage = "";
+        var showMessage = "";
+        var hideMessage = "";
         
         if (message.useTitle) {
             const caption = getCaption()
@@ -190,10 +248,24 @@ export function getSyntaxHighlighterElements() {
 
 //#region helpers
 function removeClass(target: HTMLElement, className: string) {
-    target.className = target.className.replace(className, '');
+     var replaced=target.className.replace(className, '');
+     var splitReplaced=replaced.split(/\s+/);
+     var newClassName="";
+     for(var i=0;i<splitReplaced.length;i++){
+         newClassName+=splitReplaced[i];
+         if(i<splitReplaced.length-1){
+             newClassName+=" ";
+         }
+     }
+     target.className = newClassName;
 };
 function addClass(target: HTMLElement, className: string) {
-    target.className = target.className + " " + className;
+    if(target.className==""){
+        target.className=className;
+    }else{
+        target.className = target.className + ' ' + className;
+    }
+    
 };
 function addClassSVGSafe(target: SVGElement|HTMLElement, className: string) {
     var cls = target.getAttribute("class");
@@ -214,7 +286,7 @@ function addClickHandler(el: Element, handler: any) {
 //#endregion
 
 export function setUpToggle(config: ToggleConfig,
-    determineToggleState?: (syntaxHighlighter: HTMLElement, toggleConfig: ToggleConfig) => ToggleState,
+    determineToggleState?: (syntaxHighlighter: HTMLElement, toggleConfig: ToggleConfig) => DataToggleState,
     determineMessages?: (syntaxHighlighter: HTMLElement, toggleConfigMessages: ToggleConfigMessages) => HideShowMessagesWhen,
     addToggleFunctionality?: (highlighterElement: HTMLElement, hide: boolean, messages: HideShowMessages, when: When, placement: ToggleConfigMessages["placement"], classNames: ClassNames) => void,
     syntaxHighlighterElementFinder?:() => HTMLCollectionOf<HTMLElement>
@@ -226,13 +298,13 @@ export function setUpToggle(config: ToggleConfig,
     syntaxHighlighterElementFinder = syntaxHighlighterElementFinder ? syntaxHighlighterElementFinder : getSyntaxHighlighterElements;
 
     const syntaxHighlighters = syntaxHighlighterElementFinder();
-    for (let i = 0; i < syntaxHighlighters.length; i++) {
+    for (var i = 0; i < syntaxHighlighters.length; i++) {
 
         var syntaxHighlighter = syntaxHighlighters[i];
         const toggleState = determineToggleState(syntaxHighlighter,config);
-        if (toggleState !== ToggleState.Never) {
+        if (toggleState !== "Never") {
             const messages = determineMessages(syntaxHighlighter, config.messages);
-            const show = toggleState === ToggleState.Show;
+            const show = toggleState === "Show";
             addToggleFunctionality(syntaxHighlighter, !show,
                 {hiddenMessage:messages.hiddenMessage,showMessage:messages.showMessage},
                 messages.when, config.messages.placement, config.classNames);

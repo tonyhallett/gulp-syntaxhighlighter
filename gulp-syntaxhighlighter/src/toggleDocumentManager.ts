@@ -24,7 +24,9 @@ export class ToggleDocumentManager implements IToggleDocumentManager {
         hideToggle: "hideToggle",
         showToggle: "showToggle",
         toggleContainerShown: "toggleContainerShown",
-        toggleContainerHidden: "toggleContainerHidden"
+        toggleContainerHidden: "toggleContainerHidden",
+        toggleContainerToggled:"toggleContainerToggled",
+        toggleContainerInitial:"toggleContainerInitial"
     }
     private createToggleFn!: string;
     private css!:string;
@@ -82,34 +84,40 @@ export class ToggleDocumentManager implements IToggleDocumentManager {
     }
     private defaultCreateToggleFn(): string {
         return `
-        function createToggleElement(show){//much easier through path
-            var xmlns="http://www.w3.org/2000/svg"
-
-            var svg=document.createElementNS(xmlns,"svg");
-            
-            svg.setAttributeNS(null,"fill","none");
-            svg.setAttributeNS(null,"stroke-linecap","round");
-            svg.setAttributeNS(null,"stroke-linejoin","round");
-            svg.setAttributeNS(null,"stroke-width","2");
-            svg.setAttributeNS(null,"viewBox","0 0 24 24");
-           
-            var rect=document.createElementNS(xmlns,"rect");
-            rect.setAttributeNS(null,"height",14);
-            rect.setAttributeNS(null,"rx",7);
-            rect.setAttributeNS(null,"ry",7);
-            rect.setAttributeNS(null,"width",22);
-            rect.setAttributeNS(null,"x",1);
-            rect.setAttributeNS(null,"y",5);
-
-            var circle=document.createElementNS(xmlns,"circle")
-            circle.setAttributeNS(null,"cy",12);
-            circle.setAttributeNS(null,"r",3);
-            circle.setAttributeNS(null,"cx",show?16:8);
-
-            svg.append(rect);
-            svg.append(circle);
-            
-            return svg;
+        function createToggleElement(){
+            function createToggleShowHide(show){
+                var xmlns="http://www.w3.org/2000/svg"
+    
+                var svg=document.createElementNS(xmlns,"svg");
+                
+                svg.setAttributeNS(null,"fill","none");
+                svg.setAttributeNS(null,"stroke-linecap","round");
+                svg.setAttributeNS(null,"stroke-linejoin","round");
+                svg.setAttributeNS(null,"stroke-width","2");
+                svg.setAttributeNS(null,"viewBox","0 0 24 24");
+               
+                var rect=document.createElementNS(xmlns,"rect");
+                rect.setAttributeNS(null,"height",14);
+                rect.setAttributeNS(null,"rx",7);
+                rect.setAttributeNS(null,"ry",7);
+                rect.setAttributeNS(null,"width",22);
+                rect.setAttributeNS(null,"x",1);
+                rect.setAttributeNS(null,"y",5);
+    
+                var circle=document.createElementNS(xmlns,"circle")
+                circle.setAttributeNS(null,"cy",12);
+                circle.setAttributeNS(null,"r",3);
+                circle.setAttributeNS(null,"cx",show?16:8);
+    
+                svg.append(rect);
+                svg.append(circle);
+                
+                return svg;
+            }
+            return {
+                showToggle:createToggleShowHide(true),
+                hideToggle:createToggleShowHide(false),
+            }
         }
         `
     }
@@ -119,7 +127,7 @@ export class ToggleDocumentManager implements IToggleDocumentManager {
     private getDefaultToggleCss(classNames: ToggleConfig["classNames"]): string {
         const svgSize = "1em";
         return `.${classNames.toggle}{ stroke:#000;top:0.125em;position:relative;height:${svgSize};width:${svgSize} }
-        .${classNames.toggleText}{ font-size:${svgSize}}
+        .${classNames.toggleText}{padding:10px; font-size:${svgSize}}
         `
     }
     private addToggleCss() {

@@ -29,6 +29,8 @@ interface ClassNames {
     toggleContainer: string,
     toggleContainerShown: string,
     toggleContainerHidden: string,
+    toggleContainerInitial:string,
+    toggleContainerToggled:string,
     toggleText: string,
     toggle: string,
     showToggle: string,
