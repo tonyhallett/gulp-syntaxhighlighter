@@ -1,18 +1,15 @@
 {
   "name": "gulp-syntaxhighlighter",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "Apply syntax highlighter at build time - if hiding/showing is required adds small amount of javascript and css",
-  "main": "gulp-syntaxhighlighter.js",
+  "main": "dist/gulp-syntaxhighlighter.js",
   "types": "gulp-syntaxhighlighter.ts",
   "files": [
-    "syntaxHighlighter",
-    "gulp-syntaxhighlighter.js",
-    "gulp-syntaxhighlighter.d.ts",
-    "toggle/toggle.js"
+    "dist"
   ],
   "scripts": {
     "test": "jest --projects .\\gulp-syntaxhighlighter .\\toggle\\src\\toggleExport",
-    "testToggle":"jest --projects .\\toggle\\src\\toggleExport",
+    "testToggle": "jest --projects .\\toggle\\src\\toggleExport",
     "tsc": "tsc"
   },
   "author": {
