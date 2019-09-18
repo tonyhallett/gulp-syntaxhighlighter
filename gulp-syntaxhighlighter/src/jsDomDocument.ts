@@ -1,19 +1,21 @@
 import { JSDOM } from 'jsdom';
 import { IJsDomDocument } from './interfaces'
 export class JsDomDocument implements IJsDomDocument {
-    private syntaxHighlighterScriptClassName = "__syntaxHighlighterScript";
     private dom: JSDOM;
     private document: Document;
 
     constructor(html: string) {
-        this.dom = new JSDOM(html, { runScripts: "dangerously" });
+        this.dom = new JSDOM(html, { runScripts: "outside-only" });
         this.document = this.dom.window.document;
     }
-
+    private scripts:string[]=[];
     addSyntaxHighlighterScript(contents: string) {
-        this.addScript(contents,(se)=>{
-            se.className = this.syntaxHighlighterScriptClassName;
-        })
+        this.scripts.push(contents);
+    }
+    executeSyntaxHighlighter(windowEval:string){
+        this.scripts.push(windowEval);
+        const toEval=this.scripts.join("");
+        this.dom.window.eval(toEval);
     }
     addScript(contents:string,callback:(scriptEl:HTMLScriptElement)=>void=function(){}){
         const scriptEl = this.document.createElement("script");
@@ -34,9 +36,9 @@ export class JsDomDocument implements IJsDomDocument {
 
     getNewContents(isPartial: boolean) {
         if (isPartial) {
-            return this.document.head.innerHTML + this.getBodyWithoutSyntaxHighlighterScripts();
+            return this.document.head.innerHTML + this.document.body.outerHTML;
         } else {
-            return this.getDocTypeString() + this.getHtmlWithoutSyntaxHighlighterScripts();
+            return this.getDocTypeString() + this.document.documentElement.outerHTML;
         }
     }
 
@@ -50,24 +52,6 @@ export class JsDomDocument implements IJsDomDocument {
                 + (!node.publicId && node.systemId ? ' SYSTEM' : '')
                 + (node.systemId ? ' "' + node.systemId + '"' : '')
                 + '>';
-        }
-        return html;
-    }
-
-    private getHtmlWithoutSyntaxHighlighterScripts() {
-        const htmlEl = this.document.documentElement;
-        let html = htmlEl.outerHTML;
-        return this.removeScripts(html);
-    }
-    private getBodyWithoutSyntaxHighlighterScripts() {
-        const body = this.document.body;
-        let html = body.outerHTML;
-        return this.removeScripts(html);
-    }
-    private removeScripts(html:string):string{
-        const removableScripts = this.document.getElementsByClassName(this.syntaxHighlighterScriptClassName);
-        for (let i = 0; i < removableScripts.length; i++) {
-            html = html.replace(removableScripts[i].outerHTML, "");
         }
         return html;
     }

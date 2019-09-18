@@ -11,6 +11,7 @@ export interface IJsDomDocumentFactory {
 
 export interface IJsDomDocument {
     addSyntaxHighlighterScript(contents: string): void;
+    executeSyntaxHighlighter(windowEval: string): void;
     addToggleScript(contents: string): void;
     addCss(css: string): void;
     getNewContents(isPartial: boolean): string;

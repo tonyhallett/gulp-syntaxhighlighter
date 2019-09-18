@@ -49,7 +49,7 @@ SyntaxHighlighter.highlight(${globalParams});
 `
     }
     applySyntaxHighlighter(globalParams: SyntaxHighlighterGlobalParamsNoToolbar, config: GulpSyntaxHighlighterOptions["config"]) {
-        this.jsDomDocument.addSyntaxHighlighterScript(
+        this.jsDomDocument.executeSyntaxHighlighter(
             this.getHighlightScript(
                 JSON.stringify(globalParams),
                 JSON.stringify(config)
