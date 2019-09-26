@@ -1,7 +1,5 @@
 node_modules
 dist
 **/*coverage
-!toggle/toggleDefns.d.ts
 demo/dest
-/.vs/config
-/.vs
+
