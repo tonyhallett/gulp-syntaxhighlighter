@@ -3,22 +3,21 @@ import {jestTests} from './jesttests'
 import {compile,gshTsCompile,toggleCompile} from './compile'
 import {assetsToDist} from './assets'
 import {buildDemo} from './demo'
-import {destination} from './dest'
-import {generateExported} from './toggleExportGulp'
-import * as fs from 'fs-extra';
-import * as path from 'path';
+import {watchAll} from './watch'
+import {testPackageJson} from './packageJson'
+
 
 export {
     jestTests,
     assetsToDist,
     compile,gshTsCompile,toggleCompile,
     buildDemo,
-    generateExported
+    watchAll,
+    testPackageJson
 }
 
-function cleanDist(){
-    return fs.emptyDir(path.join(process.cwd(),destination));
-}
+
 export const compileWithAssets=gulp.parallel(assetsToDist,compile);
 
-export const build=gulp.series(jestTests,cleanDist,compileWithAssets,buildDemo);
+export const build=gulp.series(compileWithAssets,buildDemo);
+

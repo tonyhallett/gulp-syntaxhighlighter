@@ -1,10 +1,9 @@
-///<reference path="./toggleDefns.d.ts"/>
-///<reference path="./toggle.global.d.ts"/>
-
+///<reference path="../toggleDefns.d.ts"/>
+///<reference path="../toggle.global.d.ts"/>
 
 
 //attribute or config
-function getToggleState(syntaxHighlighter: HTMLElement, toggleConfig: ToggleConfig) {
+export function getToggleState(syntaxHighlighter: HTMLElement, toggleConfig: ToggleConfig) {
     const dataToggle = syntaxHighlighter.getAttribute("data-toggleState");
     var toggleState: DataToggleState = "Never";
     if (dataToggle === "Show") {
@@ -23,7 +22,7 @@ function getToggleState(syntaxHighlighter: HTMLElement, toggleConfig: ToggleConf
     return toggleState;
 }
 
-function createToggle(highlighterElement: HTMLElement, hide: boolean, messages: HideShowMessages, messageWhen: When, placement: ToggleConfigMessages["placement"], classNames: ClassNames) {
+export function createToggle(highlighterElement: HTMLElement, hide: boolean, messages: HideShowMessages, messageWhen: When, placement: ToggleConfigMessages["placement"], classNames: ClassNames) {
     var isHidden = hide;
     var hasToggled=false;
     function createClickHandler(additionalOperations?:Function){
@@ -169,7 +168,7 @@ function createToggle(highlighterElement: HTMLElement, hide: boolean, messages: 
                 clearTimeout(singleDelayTimeout);
                 singleDelayTimeout=undefined;
             }else{
-                singleDelayTimeout=setTimeout(()=>{
+                singleDelayTimeout=window.setTimeout(()=>{
                     addMessageToToggleContainer();
                     toggleHighlighter();
                     singleDelayTimeout=undefined;
@@ -191,7 +190,7 @@ function createToggle(highlighterElement: HTMLElement, hide: boolean, messages: 
     
 }
 
-function getHideShowMessagesWhen(syntaxHighlighter: HTMLElement, toggleConfigMessages: ToggleConfigMessages): HideShowMessagesWhen {
+export function getHideShowMessagesWhen(syntaxHighlighter: HTMLElement, toggleConfigMessages: ToggleConfigMessages): HideShowMessagesWhen {
     function getHideShowMessages(message: ToggleConfigMessages): HideShowMessages {
         function getCaption() {
             var captionStr="";
@@ -242,7 +241,7 @@ function getHideShowMessagesWhen(syntaxHighlighter: HTMLElement, toggleConfigMes
     return { when: messages.when, showMessage: hideShowMessages.showMessage, hiddenMessage: hideShowMessages.hiddenMessage };
 }
 
-function getSyntaxHighlighterElements() {
+export function getSyntaxHighlighterElements() {
     return <HTMLCollectionOf<HTMLElement>>window.document.getElementsByClassName("syntaxhighlighter");
 }
 
@@ -285,7 +284,7 @@ function addClickHandler(el: Element, handler: any) {
 }
 //#endregion
 
-function setUpToggle(config: ToggleConfig,
+export function setUpToggle(config: ToggleConfig,
     determineToggleState?: (syntaxHighlighter: HTMLElement, toggleConfig: ToggleConfig) => DataToggleState,
     determineMessages?: (syntaxHighlighter: HTMLElement, toggleConfigMessages: ToggleConfigMessages) => HideShowMessagesWhen,
     addToggleFunctionality?: (highlighterElement: HTMLElement, hide: boolean, messages: HideShowMessages, when: When, placement: ToggleConfigMessages["placement"], classNames: ClassNames) => void,

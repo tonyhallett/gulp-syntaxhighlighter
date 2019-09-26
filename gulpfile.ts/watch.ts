@@ -1,20 +1,21 @@
 import * as gulp from 'gulp'
 import {gshTsCompile,toggleCompile} from './compile'
 import {assetsToDist} from './assets'
-export function watchToggle(done){
-    gulp.watch("./toggle/src/*.ts",toggleCompile);
+type Done=()=>void;
+export function watchToggle(done:Done){
+    gulp.watch("./toggle/src/toggleExport/*.ts",{ignoreInitial:false},toggleCompile);
     done();
 }
 
-export function watchGulpSyntaxHighlighter(done){
+export function watchGulpSyntaxHighlighter(done:Done){
     //https://github.com/ivogabe/gulp-typescript/issues/191
-    gulp.watch("./syntaxHighlighter/*",gshTsCompile);
+    gulp.watch("./gulp-syntaxhighlighter/src/*.ts",{ignoreInitial:false},gshTsCompile);
     done();
 }
-export function watchAssets(done){
-    gulp.watch("./gulp-syntaxhighlighter/src/*.ts",assetsToDist);
+export function watchAssets(done:Done){
+    
+    gulp.watch("./syntaxHighlighter/*",{ignoreInitial:false},assetsToDist);
     done();
 }
-export function watchAll(){
-    return gulp.parallel(watchAssets,watchGulpSyntaxHighlighter,watchToggle)
-}
+
+export const watchAll = gulp.parallel(watchAssets,watchGulpSyntaxHighlighter,watchToggle);

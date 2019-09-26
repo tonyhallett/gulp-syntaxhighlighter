@@ -1,10 +1,15 @@
 import {SyntaxHighlighterAssetLoader} from '../src/syntaxHighlighterAssetLoader'
-import {srcDirectory} from '../__tests__helpers/dirnameHelper'
-
+import { ISyntaxHighlighterAssetLocator } from '../src/interfaces';
+const assetFolderPath="AssetFolderPath"
+const locator:ISyntaxHighlighterAssetLocator={
+    getFolderPath:()=>{
+        return assetFolderPath;
+    }
+}
 jest.mock('path',()=>{
     return {
         resolve:jest.fn((dir:string,segment:string)=>{
-            expect(dir).toEqual(srcDirectory);
+            expect(dir).toEqual(assetFolderPath);
 
             if(segment==="shCore"){
                 return "themePrefix"
@@ -30,7 +35,7 @@ jest.mock('path',()=>{
 jest.mock('../src/fileHelper',()=>{
     return {
         getFilteredFilesFromDirectoryDeep:jest.fn((dir:string,filter:(f:string,fn:string)=>boolean)=>{
-            if(dir===srcDirectory){
+            if(dir===assetFolderPath){
                 const brushes = [
                     "notABrush.min.js",
                     "notABrush.js",
@@ -82,7 +87,8 @@ describe('SyntaxHighlighterAssetLoader',()=>{
     describe('getTheme',()=>{
         [true,false].forEach(minified=>{
             it(`should return the ${minified?'minified':'unminified'} theme from the resolved path`,()=>{
-                var assetLoader=new SyntaxHighlighterAssetLoader();
+                
+                var assetLoader=new SyntaxHighlighterAssetLoader(locator);
                 var loadedTheme=assetLoader.getTheme(minified,"TheTheme");
                 expect(loadedTheme).toEqual(minified?"minifiedTheTheme":"theTheme");
             })
@@ -91,13 +97,13 @@ describe('SyntaxHighlighterAssetLoader',()=>{
     describe('getScripts',()=>{
         [true,false].forEach(minified=>{
             it(`should return the ${minified?'minified':'unminified'} shcore js`,()=>{
-                var assetLoader=new SyntaxHighlighterAssetLoader();
+                var assetLoader=new SyntaxHighlighterAssetLoader(locator);
                 var scripts=assetLoader.getScripts(minified);
                 var shcoreScript=scripts[0];
                 expect(shcoreScript).toEqual(minified?"shcoremin":"shcore");
             })
             it(`should return all ${minified?'minified':'unminified'} brush files`,()=>{
-                var assetLoader=new SyntaxHighlighterAssetLoader();
+                var assetLoader=new SyntaxHighlighterAssetLoader(locator);
                 var scripts=assetLoader.getScripts(minified);
                 scripts.splice(0,1);
                 expect(scripts).toEqual(minified?["shBrush1min","shBrush2min"]:["shBrush1","shBrush2"]);

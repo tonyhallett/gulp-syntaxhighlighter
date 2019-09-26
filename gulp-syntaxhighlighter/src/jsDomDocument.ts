@@ -17,7 +17,7 @@ export class JsDomDocument implements IJsDomDocument {
         const toEval=this.scripts.join("");
         this.dom.window.eval(toEval);
     }
-    addScript(contents:string,callback:(scriptEl:HTMLScriptElement)=>void=function(){}){
+    private addScript(contents:string,callback:(scriptEl:HTMLScriptElement)=>void=function(){}){
         const scriptEl = this.document.createElement("script");
         scriptEl.textContent = contents;
         callback(scriptEl);
@@ -41,7 +41,8 @@ export class JsDomDocument implements IJsDomDocument {
             return this.getDocTypeString() + this.document.documentElement.outerHTML;
         }
     }
-
+    //from https://stackoverflow.com/questions/6088972/get-doctype-of-an-html-as-string-with-javascript
+    /* istanbul ignore next */
     private getDocTypeString() {
         var node = this.document.doctype;
         let html = "";

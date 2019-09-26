@@ -1,11 +1,18 @@
 import {ToggleDocumentManager} from '../src/toggleDocumentManager'
 import { IToggleConfig, IClassNames } from '../src/publicInterfaces';
-import {srcDirectory} from '../__tests__helpers/dirnameHelper';
+import { IToggleLocator } from '../src/interfaces';
+
+const toggleFolder="ToggleFolder";
+const toggleLocator:IToggleLocator={
+    getFolderPath:()=>{
+        return toggleFolder;
+    }
+}
 
 jest.mock('path',()=>{
     return {
         join:jest.fn((dir:string,togglejs:string)=>{
-            expect(dir).toBe(srcDirectory);
+            expect(dir).toBe(toggleFolder);
             return togglejs;
         })
     }
@@ -39,7 +46,7 @@ describe('ToggleDocumentManager addToggle',()=>{
     describe('css',()=>{
         type ToggleCssTestOption = ToggleTestOption<{expectedMinifiedCss:string}>
         function getDefaultCssTestOption():ToggleCssTestOption{
-            const forDefaultCss=new ToggleDocumentManager(null as any,null as any);
+            const forDefaultCss=new ToggleDocumentManager(null as any,null as any,toggleLocator);
             const classNames:IClassNames={
                 toggle:"ToggleClass",
                 toggleText:"ToggleTextClass"
@@ -63,7 +70,7 @@ describe('ToggleDocumentManager addToggle',()=>{
         cssToggleTestOptions.forEach(option=>{
             it(`should add minified ${option.description} to the jsDocument`,()=>{
                 
-                const toggleDocumentManager=new ToggleDocumentManager(mockJsDomDocument as any,mockMinifier as any);
+                const toggleDocumentManager=new ToggleDocumentManager(mockJsDomDocument as any,mockMinifier as any,toggleLocator);
                 const  {expectedMinifiedCss,description,...toggleConfig}=option;
                 toggleDocumentManager.addToggle(toggleConfig);
                 expect(mockJsDomDocument.addCss).toHaveBeenCalledWith("minified css");
@@ -74,7 +81,7 @@ describe('ToggleDocumentManager addToggle',()=>{
     describe('js',()=>{
         type ToggleJsTestOption=ToggleTestOption<{expectedCreateToggleFn:string,expectedToggleConfig:ToggleConfig}>
         function getJsOptionForDefaultCreateToggleFn():ToggleJsTestOption{
-            const forDefaultJs=new ToggleDocumentManager(null as any,null as any) as any;
+            const forDefaultJs=new ToggleDocumentManager(null as any,null as any,toggleLocator) as any;
             const defaultToggleFn=forDefaultJs.defaultCreateToggleFn();
             return {
                 expectedCreateToggleFn:defaultToggleFn,
@@ -179,7 +186,7 @@ describe('ToggleDocumentManager addToggle',()=>{
         ]
         jsToggleTestOptions.forEach(option=>{
             it('should add minified js to the jsDomDocument',()=>{
-                const toggleDocumentManager=new ToggleDocumentManager(mockJsDomDocument as any,mockMinifier as any);
+                const toggleDocumentManager=new ToggleDocumentManager(mockJsDomDocument as any,mockMinifier as any,toggleLocator);
                 const  {expectedCreateToggleFn,expectedToggleConfig,description, ...toggleConfig}=option;
                 toggleDocumentManager.addToggle(toggleConfig);
                 expect(mockJsDomDocument.addToggleScript).toHaveBeenCalledWith("minified js");

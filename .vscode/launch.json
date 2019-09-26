@@ -6,16 +6,6 @@
     "configurations": [
         {
             "type": "node",
-            "request": "launch",
-            "name": "Gulp generateExported",
-            "program": "${workspaceFolder}/node_modules/gulp/bin/gulp.js",
-            "args": [
-                "generateExported"
-            ],
-            "trace":true
-        },
-        {
-            "type": "node",
             "name": "vscode-jest-tests",
             "request": "launch",
             "args": [
@@ -59,7 +49,7 @@
             "internalConsoleOptions": "neverOpen",
             "program": "${workspaceFolder}/node_modules/jest/bin/jest"
         },
-    ,
+    
     //${file} does not work for below
     {
         "type": "node",

@@ -26,40 +26,32 @@ const mockCreateElement=jest.fn((elementType:string):MockElement=>{
 });
 const mockBodyAppendChild=jest.fn()
 const mockHeadAppendChild=jest.fn()
+const mockEval = jest.fn();
+const mockDocument={
+    documentElement:{
+        outerHTML:"DocumentElement_OuterHTML"
+    },
+    
 
+
+    createElement:mockCreateElement,
+    
+    body:{
+        appendChild:mockBodyAppendChild,
+        outerHTML:"Body_OuterHTML",
+    },
+    head:{
+        appendChild:mockHeadAppendChild,
+        innerHTML:"Head_InnerHTML"
+    }
+}
 jest.mock('jsdom',()=>{
     return {
         JSDOM:jest.fn().mockImplementation(() => {
             return {
                 window:{
-                    document:{
-                        docType:{
-
-                        },
-                        documentElement:{
-                            outerHTML:"Blah RemoveThis Blah RemoveThat"
-                        },
-                        getElementsByClassName:function(className:string){
-                            if(className==="__syntaxHighlighterScript"){
-                                return [
-                                    {outerHTML:"RemoveThis"},
-                                    {outerHTML:"RemoveThat"}
-                                ]
-                            }
-                        },
-
-
-                        createElement:mockCreateElement,
-                        
-                        body:{
-                            appendChild:mockBodyAppendChild,
-                            outerHTML:"Yeah RemoveThis Yeah RemoveThat",
-                        },
-                        head:{
-                            appendChild:mockHeadAppendChild,
-                            innerHTML:"headInnerHtml"
-                        }
-                    }
+                    document:mockDocument,
+                    eval:mockEval
                 }
             };
         })
@@ -72,23 +64,26 @@ describe('JsDomDocument',()=>{
         jest.clearAllMocks();
     })
     describe('constructor',()=>{
-        it('should construct JSDOM with the html and run scripts dangerously',()=>{
+        it('should construct JSDOM with the html and run scripts outside-only',()=>{
             new JsDomDocument("html");
             const instance=(JSDOM as any).mock.instances[0];
             expect(instance).not.toBeFalsy();
             const ctorArgs=(JSDOM as any).mock.calls[0];
             expect(ctorArgs[0]).toEqual("html");
-            expect(ctorArgs[1].runScripts).toEqual("dangerously");
+            expect(ctorArgs[1].runScripts).toEqual("outside-only");
         })
     })
-    describe('addSyntaxHighlighterScript',()=>{
-        it('should append script element to body with a class identifier for later removal',()=>{
+    describe('executeSyntaxHighlighter',()=>{
+        it('should eval joined args of calls to addSyntaxHighlighterScript and executeSyntaxHighlighter',()=>{
             const jsDomDocument=new JsDomDocument("");
-            jsDomDocument.addSyntaxHighlighterScript("syntaxHighlighterContents");
-            const highlighterScriptElement:MockScriptElement=mockBodyAppendChild.mock.calls[0][0];
-            expect(highlighterScriptElement._type).toEqual("script")
-            expect(highlighterScriptElement.textContent).toEqual('syntaxHighlighterContents');
-            expect(highlighterScriptElement.className!).toEqual('__syntaxHighlighterScript');
+            const script1="script1";
+            const script2="script2";
+            const executeScript="execute";
+            jsDomDocument.addSyntaxHighlighterScript(script1);
+            jsDomDocument.addSyntaxHighlighterScript(script2);
+            jsDomDocument.executeSyntaxHighlighter(executeScript);
+            
+            expect(mockEval).toHaveBeenCalledWith("script1script2execute");
         })
     })
     describe('addToggleScript',()=>{
@@ -110,16 +105,38 @@ describe('JsDomDocument',()=>{
             expect(styleElement.innerHTML).toEqual("some css");
         })
     })
-    //this will be difficult
     describe('getNewContents',()=>{
         describe('partial',()=>{
-            it('should return head inner html and body without syntaxhighlighter scripts',()=>{
+            it('should return head inner html and body outer html',()=>{
                 const jsDomDocument=new JsDomDocument("");
-                expect(jsDomDocument.getNewContents(true)).toBe("headInnerHtmlYeah  Yeah ");
+                expect(jsDomDocument.getNewContents(true)).toBe("Head_InnerHTMLBody_OuterHTML");
             })
         });
-        describe("full",()=>{
-
+        describe('full',()=>{
+            [{
+                doctype:{
+                    name:'nodename',
+                    publicId:"publicId",
+                },
+                description:'publicId',
+                expected:"<!DOCTYPE nodename PUBLIC \"publicId\">DocumentElement_OuterHTML"
+            },
+            {
+                doctype:{
+                    name:'nodename',
+                    systemId:"systemId"
+                },
+                description:'systemId',
+                expected:"<!DOCTYPE nodename SYSTEM \"systemId\">DocumentElement_OuterHTML"
+            }].forEach(test=>{
+                it(`should return the doctype and the document element outer html - ${test.description}`,()=>{
+                    (mockDocument as any).doctype=test.doctype;
+                    const jsDomDocument=new JsDomDocument("");
+                    expect(jsDomDocument.getNewContents(false)).toBe(test.expected);
+                    })
+                
+            })
+            
         })
     })
 })

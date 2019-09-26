@@ -1,5 +1,5 @@
 ///<reference path="../../toggleDefns.d.ts"/>
-import {createToggle,getHideShowMessagesWhen,getSyntaxHighlighterElements,getToggleState,setUpToggle} from '../toggleExport'
+import {createToggle,getHideShowMessagesWhen,getSyntaxHighlighterElements,getToggleState,setUpToggle} from '../toggle'
 
 interface ITestSyntaxHighlighterElement{
     children:[{caption?:{textContent:string|null}}],

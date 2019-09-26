@@ -4,6 +4,7 @@ import {ToggleDocumentManager} from '../src/toggleDocumentManager'
 import {ToggleDocumentManagerFactory} from '../src/toggleDocumentManagerFactory'
 import {SyntaxHighlighterDocumentManagerFactory} from '../src/syntaxHighlighterDocumentManagerFactory'
 import {SyntaxHighlighterDocumentManager} from '../src/syntaxHighlighterDocumentManager'
+import { IToggleLocator } from '../src/interfaces'
 
 jest.mock('../src/jsDomDocument',()=>{
     return {
@@ -31,12 +32,15 @@ describe('jsDomDocumentFactory',()=>{
 
 describe('toggleDocumentManagerFactory',()=>{
     it('should create a toggleDocumentManager with the args',()=>{
-        const factory=new ToggleDocumentManagerFactory();
+        const mockToggleLocator:IToggleLocator={
+            getFolderPath:()=>"path"
+        }
+        const factory=new ToggleDocumentManagerFactory(mockToggleLocator);
         var mockDoc={} as any;
         var mockMinifier={} as any;
         var toggle=factory.create(mockDoc,mockMinifier);
         expect(toggle).toBeTruthy();
-        expect(ToggleDocumentManager as any as jest.Mock).toBeCalledWith(mockDoc,mockMinifier);
+        expect(ToggleDocumentManager as any as jest.Mock).toBeCalledWith(mockDoc,mockMinifier,mockToggleLocator);
     })
 })
 

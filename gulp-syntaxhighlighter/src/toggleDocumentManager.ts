@@ -1,7 +1,7 @@
 ///<reference path="../../toggle/src/toggleDefns.d.ts"/>
 import * as path from 'path'
 import * as fs from 'fs'
-import { IToggleDocumentManager, IJsDomDocument, IMinifier } from './interfaces'
+import { IToggleDocumentManager, IJsDomDocument, IMinifier, IToggleLocator } from './interfaces'
 import { IToggleConfig, } from './publicInterfaces'
 
 export class ToggleDocumentManager implements IToggleDocumentManager {
@@ -30,7 +30,10 @@ export class ToggleDocumentManager implements IToggleDocumentManager {
     }
     private createToggleFn!: string;
     private css!:string;
-    constructor(private readonly jsDomDocument: IJsDomDocument, private readonly minifier: IMinifier) { }
+    private toggleFolderPath:string;
+    constructor(private readonly jsDomDocument: IJsDomDocument, private readonly minifier: IMinifier,toggleLocator:IToggleLocator) { 
+        this.toggleFolderPath=toggleLocator.getFolderPath();
+    }
         
 
     public addToggle(toggleConfig: IToggleConfig) {
@@ -80,7 +83,7 @@ export class ToggleDocumentManager implements IToggleDocumentManager {
         return this.minifier.minifyScript(script);
     }
     private readToggle() {
-        return fs.readFileSync(path.join(__dirname, "toggle.js"), "utf8");
+        return fs.readFileSync(path.join(this.toggleFolderPath, "toggle.js"), "utf8");
     }
     private defaultCreateToggleFn(): string {
         return `

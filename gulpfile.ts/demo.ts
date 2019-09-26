@@ -1,12 +1,12 @@
-import * as gulp from 'gulp'
+import {src,dest,series,parallel} from 'gulp'
 import {GulpSyntaxHighlighterOptions} from '../gulp-syntaxhighlighter/src/publicInterfaces'
 import * as fs from 'fs-extra';
 import * as path from 'path';
+import {syntaxHighlighter} from '../dist/gulp-syntaxHighlighter/gulp-syntaxhighlighter'
 
 function createExampleBuild(example:string,options:GulpSyntaxHighlighterOptions){
     const task=()=>{
-        var syntaxHighlighter=require('../dist/gulp-syntaxhighlighter').syntaxHighlighter;
-        return gulp.src(`demo/src/${example}.html`).pipe(syntaxHighlighter(options)).pipe(gulp.dest("demo/dest"));
+        return src(`demo/src/${example}.html`).pipe(syntaxHighlighter(options)).pipe(dest("demo/dest"));
     }
     task.displayName="build" + example; 
     return task;
@@ -159,4 +159,4 @@ function cleanDest(){
     return fs.emptyDir(path.join(process.cwd(),"demo/dest"));
 }
 
-export const buildDemo= gulp.series(cleanDest,gulp.parallel(defaultOptionsExample,buildExample1,buildExample2,singleToggleExample));
+export const buildDemo= series(cleanDest,parallel(defaultOptionsExample,buildExample1,buildExample2,singleToggleExample));

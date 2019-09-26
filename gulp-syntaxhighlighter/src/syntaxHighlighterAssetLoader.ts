@@ -1,16 +1,20 @@
 import * as path from 'path'
 import * as fs from 'fs'
-import { ISyntaxHighlighterAssetLoader } from "./interfaces"
+import { ISyntaxHighlighterAssetLoader, ISyntaxHighlighterAssetLocator } from "./interfaces"
 import { getFilteredFilesFromDirectoryDeep } from "./fileHelper"
 
 export class SyntaxHighlighterAssetLoader implements ISyntaxHighlighterAssetLoader {
+    private assetFolder:string;
+    constructor(syntaxHighlighterAssetLocator:ISyntaxHighlighterAssetLocator){
+        this.assetFolder = syntaxHighlighterAssetLocator.getFolderPath();
+    }
     private getShCore(minified: boolean) {
         const shCorePath = "shCore" + this.getJsExtension(minified);
-        return fs.readFileSync(path.resolve(__dirname, shCorePath), "utf8");
+        return fs.readFileSync(path.resolve(this.assetFolder, shCorePath), "utf8");
     }
 
     private getBrushFiles(minified: boolean) {
-        return getFilteredFilesFromDirectoryDeep(__dirname, (f,fn) => {
+        return getFilteredFilesFromDirectoryDeep(this.assetFolder, (f,fn) => {
             if(fn.startsWith("shBrush")){
                 if(minified){
                     return fn.endsWith(".min.js");
@@ -32,7 +36,7 @@ export class SyntaxHighlighterAssetLoader implements ISyntaxHighlighterAssetLoad
 
     getTheme(minified: boolean, theme: string): string {
         const themeFileName = "shCore" + theme + (minified ? ".min" : "") + ".css";
-        const themePath = path.resolve(__dirname,themeFileName);
+        const themePath = path.resolve(this.assetFolder,themeFileName);
         return fs.readFileSync(themePath, "utf8");
     }
 

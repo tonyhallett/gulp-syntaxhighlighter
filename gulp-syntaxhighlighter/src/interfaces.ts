@@ -4,6 +4,10 @@ export interface ISyntaxHighlighterAssetLoader {
     getScripts(minified: boolean): string[];
     getTheme(minified: boolean, theme: string): string;
 }
+export interface ISyntaxHighlighterAssetLocator {
+    getFolderPath():string
+}
+
 
 export interface IJsDomDocumentFactory {
     create(html: string): IJsDomDocument
@@ -42,4 +46,7 @@ export interface IToggleDocumentManagerFactory {
 
 export interface IToggleDocumentManager {
     addToggle(toggleConfig: IToggleConfig): void;
+}
+export interface IToggleLocator{
+    getFolderPath():string
 }

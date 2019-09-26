@@ -10,6 +10,7 @@
   "scripts": {
     "test": "jest --projects .\\gulp-syntaxhighlighter .\\toggle\\src\\toggleExport",
     "testToggle": "jest --projects .\\toggle\\src\\toggleExport",
+    "testSh": "jest --projects .\\gulp-syntaxhighlighter",
     "tsc": "tsc"
   },
   "author": {
@@ -47,6 +48,7 @@
     "through2": "^3.0.1",
     "ts-jest": "^24.0.0",
     "ts-node": "^8.0.3",
-    "typescript": "^3.3.4000"
+    "typescript": "^3.3.4000",
+    "typescript-remove-exports": "^1.0.0"
   }
 }

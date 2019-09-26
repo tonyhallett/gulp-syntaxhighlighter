@@ -4,7 +4,8 @@ describe('SyntaxHighlighterDocumentManager',()=>{
     describe('css',()=>{
         const mockJsDocument={
             addCss:jest.fn(),
-            addSyntaxHighlighterScript:jest.fn()
+            addSyntaxHighlighterScript:jest.fn(),
+            executeSyntaxHighlighter:jest.fn()
         };
         const mockMinifier={
             minifyCss:jest.fn((css:string)=>{
@@ -72,7 +73,7 @@ describe('SyntaxHighlighterDocumentManager',()=>{
             
         });
         describe('applySyntaxHighlighter',()=>{
-            it('should addSyntaxHighlighterScript to the jsDocument',()=>{
+            it('should executeSyntaxHighlighterScript on the jsDocument',()=>{
                 interface Stringified{
                     stringified:string
                 }
@@ -86,7 +87,7 @@ describe('SyntaxHighlighterDocumentManager',()=>{
 
                 syntaxHighlighterDocumentManager.applySyntaxHighlighter(globalParams as any,config as any);
                 const expectedScript=(syntaxHighlighterDocumentManager as any).getHighlightScript(globalParams.stringified,config.stringified);
-                expect(mockJsDocument.addSyntaxHighlighterScript).toHaveBeenCalledWith(expectedScript);
+                expect(mockJsDocument.executeSyntaxHighlighter).toHaveBeenCalledWith(expectedScript);
             });
         })
     });
