@@ -4,7 +4,7 @@ import {compile,gshTsCompile,toggleCompile} from './compile'
 import {assetsToDist} from './assets'
 import {buildDemo} from './demo'
 import {watchAll} from './watch'
-import {testPackageJson} from './packageJson'
+import {setMain} from './packageJson'
 
 
 export {
@@ -13,11 +13,11 @@ export {
     compile,gshTsCompile,toggleCompile,
     buildDemo,
     watchAll,
-    testPackageJson
+    setMain
 }
 
 
 export const compileWithAssets=gulp.parallel(assetsToDist,compile);
 
-export const build=gulp.series(compileWithAssets,buildDemo);
+export const build=gulp.series(compileWithAssets,buildDemo,setMain);
 

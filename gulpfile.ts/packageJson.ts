@@ -1,11 +1,17 @@
 import * as fs from "fs-extra"
 import * as path from "path";
-export function testPackageJson(done:any){
+import {gulpSyntaxHighlighterFolderName} from './compile'
+import {packageRoot} from './common'
+
+async function changePackageJson(changer:(packageJson:any)=>void){
     const packageJsonPath=path.join(path.resolve(__dirname,".."),"package.json");
-    const packageJson=fs.readJSONSync(packageJsonPath);
-    packageJson.main="dist/madeup";
-    fs.writeJSONSync(packageJsonPath,packageJson,{
+    const packageJson=await fs.readJSON(packageJsonPath);
+    changer(packageJson);
+    return fs.writeJSON(packageJsonPath,packageJson,{
         spaces:2
     })
-    done();
 }
+export function setMain(){
+    return changePackageJson((packageJson)=>{
+        packageJson.main=path.join(packageRoot,gulpSyntaxHighlighterFolderName,"gulp-syntaxhighlighter.js")
+    })}
