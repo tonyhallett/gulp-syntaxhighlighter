@@ -13,5 +13,6 @@ async function changePackageJson(changer:(packageJson:any)=>void){
 }
 export function setMain(){
     return changePackageJson((packageJson)=>{
-        packageJson.main=path.join(packageRoot,gulpSyntaxHighlighterFolderName,"gulp-syntaxhighlighter.js")
+        packageJson.main=path.join(packageRoot,gulpSyntaxHighlighterFolderName,"gulp-syntaxhighlighter.js");
+        packageJson.types=path.join(packageRoot,gulpSyntaxHighlighterFolderName,"gulp-syntaxhighlighter.d.ts")
     })}

@@ -3,7 +3,7 @@
   "version": "1.0.7",
   "description": "Apply syntax highlighter at build time - if hiding/showing is required adds small amount of javascript and css",
   "main": "dist\\gulp-syntaxHighlighter\\gulp-syntaxhighlighter.js",
-  "types": "gulp-syntaxhighlighter.ts",
+  "types": "dist\\gulp-syntaxHighlighter\\gulp-syntaxhighlighter.d.ts",
   "files": [
     "dist"
   ],
