@@ -31,7 +31,7 @@
     "@types/uglify-js": "^3.0.2",
     "@types/uglifycss": "0.0.5",
     "gulptransformbase": "^1.0.6",
-    "jsdom": "^11.10.0",
+    "jsdom": "^16.5.0",
     "uglify-js": "^3.3.24",
     "uglifycss": "0.0.29"
   },
