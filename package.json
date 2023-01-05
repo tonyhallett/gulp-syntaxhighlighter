@@ -43,7 +43,7 @@
     "fs-extra": "^7.0.1",
     "gulp": "^4.0.0",
     "gulp-typescript": "^5.0.1",
-    "gulpplugintesthelpers": "^1.0.3",
+    "gulpplugintesthelpers": "^2.0.3",
     "jest": "^24.5.0",
     "through2": "^3.0.1",
     "ts-jest": "^24.0.0",
